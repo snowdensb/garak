@@ -5,7 +5,7 @@ Supports pipelines, inference API, and models.
 Not all models on HF Hub work well with pipelines; try a Model generator
 if there are problems. Otherwise, please let us know if it's still not working!
 
- https://github.com/leondz/garak/issues
+ https://github.com/NVIDIA/garak/issues
 
 If you use the inference API, it's recommended to put your Hugging Face API key
 in an environment variable called HF_INFERENCE_TOKEN , else the rate limiting can
@@ -75,11 +75,26 @@ class Pipeline(Generator, HFCompatible):
 
         from transformers import pipeline, set_seed
 
-        if _config.run.seed is not None:
-            set_seed(_config.run.seed)
+        if self.seed is not None:
+            set_seed(self.seed)
 
         pipeline_kwargs = self._gather_hf_params(hf_constructor=pipeline)
+        pipeline_kwargs["truncation"] = (
+            True  # this is forced to maintain existing pipeline expectations
+        )
         self.generator = pipeline("text-generation", **pipeline_kwargs)
+        if self.generator.tokenizer is None:
+            # account for possible model without a stored tokenizer
+            from transformers import AutoTokenizer
+
+            self.generator.tokenizer = AutoTokenizer.from_pretrained(
+                pipeline_kwargs["model"]
+            )
+        if not hasattr(self, "use_chat"):
+            self.use_chat = (
+                hasattr(self.generator.tokenizer, "chat_template")
+                and self.generator.tokenizer.chat_template is not None
+            )
         if not hasattr(self, "deprefix_prompt"):
             self.deprefix_prompt = self.name in models_to_deprefix
         if _config.loaded:
@@ -91,6 +106,9 @@ class Pipeline(Generator, HFCompatible):
     def _clear_client(self):
         self.generator = None
 
+    def _format_chat_prompt(self, prompt: str) -> List[dict]:
+        return [{"role": "user", "content": prompt}]
+
     def _call_model(
         self, prompt: str, generations_this_call: int = 1
     ) -> List[Union[str, None]]:
@@ -99,13 +117,16 @@ class Pipeline(Generator, HFCompatible):
             warnings.simplefilter("ignore", category=UserWarning)
             try:
                 with torch.no_grad():
-                    # workaround for pipeline to truncate the input
-                    encoded_prompt = self.generator.tokenizer(prompt, truncation=True)
-                    truncated_prompt = self.generator.tokenizer.decode(
-                        encoded_prompt["input_ids"], skip_special_tokens=True
-                    )
+                    # according to docs https://huggingface.co/docs/transformers/main/en/chat_templating
+                    # chat template should be automatically utilized if the pipeline tokenizer has support
+                    # and a properly formatted list[dict] is supplied
+                    if self.use_chat:
+                        formatted_prompt = self._format_chat_prompt(prompt)
+                    else:
+                        formatted_prompt = prompt
+
                     raw_output = self.generator(
-                        truncated_prompt,
+                        formatted_prompt,
                         pad_token_id=self.generator.tokenizer.eos_token_id,
                         max_new_tokens=self.max_tokens,
                         num_return_sequences=generations_this_call,
@@ -120,10 +141,15 @@ class Pipeline(Generator, HFCompatible):
                 i["generated_text"] for i in raw_output
             ]  # generator returns 10 outputs by default in __init__
 
-        if not self.deprefix_prompt:
-            return outputs
+        if self.use_chat:
+            text_outputs = [_o[-1]["content"].strip() for _o in outputs]
         else:
-            return [re.sub("^" + re.escape(prompt), "", _o) for _o in outputs]
+            text_outputs = outputs
+
+        if not self.deprefix_prompt:
+            return text_outputs
+        else:
+            return [re.sub("^" + re.escape(prompt), "", _o) for _o in text_outputs]
 
 
 class OptimumPipeline(Pipeline, HFCompatible):
@@ -146,8 +172,8 @@ class OptimumPipeline(Pipeline, HFCompatible):
                 f"Missing required dependencies for {self.__class__.__name__}"
             )
 
-        if _config.run.seed is not None:
-            set_seed(_config.run.seed)
+        if self.seed is not None:
+            set_seed(self.seed)
 
         import torch.cuda
 
@@ -184,8 +210,8 @@ class ConversationalPipeline(Pipeline, HFCompatible):
 
         from transformers import pipeline, set_seed, Conversation
 
-        if _config.run.seed is not None:
-            set_seed(_config.run.seed)
+        if self.seed is not None:
+            set_seed(self.seed)
 
         # Note that with pipeline, in order to access the tokenizer, model, or device, you must get the attribute
         # directly from self.generator instead of from the ConversationalPipeline object itself.
@@ -256,7 +282,7 @@ class InferenceAPI(Generator):
         self.name = name
         super().__init__(self.name, config_root=config_root)
 
-        self.uri = self.URI + name
+        self.uri = self.URI + self.name
 
         # special case for api token requirement this also reserves `headers` as not configurable
         if self.api_key:
@@ -350,13 +376,13 @@ class InferenceAPI(Generator):
                         )
             else:
                 raise TypeError(
-                    f"Unsure how to parse 🤗 API response dict: {response}, please open an issue at https://github.com/leondz/garak/issues including this message"
+                    f"Unsure how to parse 🤗 API response dict: {response}, please open an issue at https://github.com/NVIDIA/garak/issues including this message"
                 )
         elif isinstance(response, list):
             return [g["generated_text"] for g in response]
         else:
             raise TypeError(
-                f"Unsure how to parse 🤗 API response type: {response}, please open an issue at https://github.com/leondz/garak/issues including this message"
+                f"Unsure how to parse 🤗 API response type: {response}, please open an issue at https://github.com/NVIDIA/garak/issues including this message"
             )
 
     def _pre_generate_hook(self):
@@ -376,7 +402,7 @@ class InferenceEndpoint(InferenceAPI):
 
     def __init__(self, name="", config_root=_config):
         super().__init__(name, config_root=config_root)
-        self.uri = name
+        self.uri = self.name
 
     @backoff.on_exception(
         backoff.fibo,
@@ -433,18 +459,14 @@ class Model(Pipeline, HFCompatible):
 
         import transformers
 
-        if _config.run.seed is not None:
-            transformers.set_seed(_config.run.seed)
-
-        trust_remote_code = self.name.startswith("mosaicml/mpt-")
+        if self.seed is not None:
+            transformers.set_seed(self.seed)
 
         model_kwargs = self._gather_hf_params(
             hf_constructor=transformers.AutoConfig.from_pretrained
         )  # will defer to device_map if device map was `auto` may not match self.device
 
-        self.config = transformers.AutoConfig.from_pretrained(
-            self.name, trust_remote_code=trust_remote_code, **model_kwargs
-        )
+        self.config = transformers.AutoConfig.from_pretrained(self.name, **model_kwargs)
 
         self._set_hf_context_len(self.config)
         self.config.init_device = self.device  # determined by Pipeline `__init__``
@@ -463,6 +485,13 @@ class Model(Pipeline, HFCompatible):
         else:
             self.tokenizer = transformers.AutoTokenizer.from_pretrained(
                 self.name, padding_side="left"
+            )
+
+        if not hasattr(self, "use_chat"):
+            # test tokenizer for `apply_chat_template` support
+            self.use_chat = (
+                hasattr(self.tokenizer, "chat_template")
+                and self.tokenizer.chat_template is not None
             )
 
         self.generation_config = transformers.GenerationConfig.from_pretrained(
@@ -489,13 +518,26 @@ class Model(Pipeline, HFCompatible):
         if self.top_k is not None:
             self.generation_config.top_k = self.top_k
 
-        text_output = []
+        raw_text_output = []
         with warnings.catch_warnings():
             warnings.simplefilter("ignore", category=UserWarning)
             with torch.no_grad():
+                if self.use_chat:
+                    formatted_prompt = self.tokenizer.apply_chat_template(
+                        self._format_chat_prompt(prompt),
+                        tokenize=False,
+                        add_generation_prompt=True,
+                    )
+                else:
+                    formatted_prompt = prompt
+
                 inputs = self.tokenizer(
-                    prompt, truncation=True, return_tensors="pt"
+                    formatted_prompt, truncation=True, return_tensors="pt"
                 ).to(self.device)
+
+                prefix_prompt = self.tokenizer.decode(
+                    inputs["input_ids"][0], skip_special_tokens=True
+                )
 
                 try:
                     outputs = self.model.generate(
@@ -509,14 +551,22 @@ class Model(Pipeline, HFCompatible):
                         return returnval
                     else:
                         raise e
-                text_output = self.tokenizer.batch_decode(
+                raw_text_output = self.tokenizer.batch_decode(
                     outputs, skip_special_tokens=True, device=self.device
                 )
+
+        if self.use_chat:
+            text_output = [
+                re.sub("^" + re.escape(prefix_prompt), "", i).strip()
+                for i in raw_text_output
+            ]
+        else:
+            text_output = raw_text_output
 
         if not self.deprefix_prompt:
             return text_output
         else:
-            return [re.sub("^" + re.escape(prompt), "", i) for i in text_output]
+            return [re.sub("^" + re.escape(prefix_prompt), "", i) for i in text_output]
 
 
 class LLaVA(Generator, HFCompatible):

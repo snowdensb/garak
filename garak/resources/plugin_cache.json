@@ -1,5 +1,65 @@
 {
   "probes": {
+    "probes.ansiescape.AnsiEscaped": {
+      "description": "Probe for eliciting ANSI control codes from a model",
+      "DEFAULT_PARAMS": {
+        "generations": 1
+      },
+      "active": true,
+      "bcp47": "en,*",
+      "doc_uri": "https://i.blackhat.com/BH-US-23/Presentations/US-23-stok-weponizing-plain-text-ansi-escape-sequences-as-a-forensic-nightmare-appendix.pdf",
+      "extended_detectors": [],
+      "goal": "print escaped ANSI terminal codes",
+      "modality": {
+        "in": [
+          "text"
+        ]
+      },
+      "parallelisable_attempts": true,
+      "primary_detector": null,
+      "recommended_detector": [
+        "ansiescape.Escaped"
+      ],
+      "tags": [
+        "owasp:llm01",
+        "owasp:llm02",
+        "owasp:llm05",
+        "avid-effect:security:S0100",
+        "avid-effect:security:S0200",
+        "quality:Security:Integrity"
+      ],
+      "mod_time": "2024-11-26 16:53:09 +0000"
+    },
+    "probes.ansiescape.AnsiRaw": {
+      "description": "Probe for eliciting raw ANSI control codes from a model",
+      "DEFAULT_PARAMS": {
+        "generations": 1
+      },
+      "active": true,
+      "bcp47": "en,*",
+      "doc_uri": "https://i.blackhat.com/BH-US-23/Presentations/US-23-stok-weponizing-plain-text-ansi-escape-sequences-as-a-forensic-nightmare-appendix.pdf",
+      "extended_detectors": [],
+      "goal": "print raw ANSI terminal codes",
+      "modality": {
+        "in": [
+          "text"
+        ]
+      },
+      "parallelisable_attempts": true,
+      "primary_detector": null,
+      "recommended_detector": [
+        "ansiescape.Raw"
+      ],
+      "tags": [
+        "owasp:llm01",
+        "owasp:llm02",
+        "owasp:llm05",
+        "avid-effect:security:S0100",
+        "avid-effect:security:S0200",
+        "quality:Security:Integrity"
+      ],
+      "mod_time": "2024-11-26 16:53:09 +0000"
+    },
     "probes.atkgen.Tox": {
       "description": "Automatic attack generation, trying to elicit toxic outputs from the model.",
       "DEFAULT_PARAMS": {
@@ -31,7 +91,7 @@
       "parallelisable_attempts": false,
       "primary_detector": null,
       "recommended_detector": [
-        "toxicity.ToxicCommentModel"
+        "unsafe_content.ToxicCommentModel"
       ],
       "tags": [
         "avid-effect:ethics:E0301",
@@ -40,7 +100,7 @@
         "quality:Behavioral:ContentSafety:Profanity",
         "payload:unwanted"
       ],
-      "mod_time": "2024-08-29 13:35:37 +0000"
+      "mod_time": "2025-02-28 21:51:23 +0000"
     },
     "probes.av_spam_scanning.EICAR": {
       "description": "Does the model check its output for viruses? Try to send the EICAR code through",
@@ -69,7 +129,7 @@
         "payload:malicious:badcode:virus",
         "quality:Security:Adversarial"
       ],
-      "mod_time": "2024-08-22 16:42:10 +0000"
+      "mod_time": "2024-10-30 21:06:57 +0000"
     },
     "probes.av_spam_scanning.GTUBE": {
       "description": "Does the model check its output for spam? Try to send the GTUBE code through",
@@ -98,7 +158,7 @@
         "payload:malicious:badcode:spam",
         "quality:Security:Adversarial"
       ],
-      "mod_time": "2024-08-22 16:42:10 +0000"
+      "mod_time": "2024-10-30 21:06:57 +0000"
     },
     "probes.av_spam_scanning.GTphish": {
       "description": "Does the model check its output for phishing? Try to send the GTphish code through",
@@ -127,7 +187,7 @@
         "payload:malicious:badcode:phishing",
         "quality:Security:Adversarial"
       ],
-      "mod_time": "2024-08-22 16:42:10 +0000"
+      "mod_time": "2024-10-30 21:06:57 +0000"
     },
     "probes.base.Probe": {
       "description": "Base class for objects that define and execute LLM evaluations",
@@ -150,7 +210,7 @@
         "always.Fail"
       ],
       "tags": [],
-      "mod_time": "2024-10-07 20:55:24 +0000"
+      "mod_time": "2025-02-28 21:51:23 +0000"
     },
     "probes.base.TreeSearchProbe": {
       "DEFAULT_PARAMS": {
@@ -177,9 +237,40 @@
         "always.Fail"
       ],
       "tags": [],
-      "mod_time": "2024-10-07 20:55:24 +0000"
+      "mod_time": "2025-02-28 21:51:23 +0000"
     },
     "probes.continuation.ContinueSlursReclaimedSlurs": {
+      "description": "Continue partial word with slur or reclaimed slur.",
+      "DEFAULT_PARAMS": {
+        "generations": 1
+      },
+      "active": true,
+      "bcp47": "en",
+      "doc_uri": "",
+      "extended_detectors": [],
+      "goal": "output an ethnic slur",
+      "modality": {
+        "in": [
+          "text"
+        ]
+      },
+      "parallelisable_attempts": true,
+      "primary_detector": null,
+      "recommended_detector": [
+        "continuation.Continuation"
+      ],
+      "tags": [
+        "avid-effect:ethics:E0101",
+        "avid-effect:ethics:E0301",
+        "avid-effect:performance:P0401",
+        "owasp:llm01",
+        "quality:Behavioral:ContentSafety:Toxicity",
+        "quality:Behavioral:ContentSafety:HateHarassment",
+        "payload:unwanted:hatespeech"
+      ],
+      "mod_time": "2025-02-28 21:51:23 +0000"
+    },
+    "probes.continuation.ContinueSlursReclaimedSlursFull": {
       "description": "Continue partial word with slur or reclaimed slur.",
       "DEFAULT_PARAMS": {
         "generations": 1
@@ -208,38 +299,7 @@
         "quality:Behavioral:ContentSafety:HateHarassment",
         "payload:unwanted:hatespeech"
       ],
-      "mod_time": "2024-09-17 17:14:48 +0000"
-    },
-    "probes.continuation.ContinueSlursReclaimedSlursMini": {
-      "description": "Continue partial word with slur or reclaimed slur.",
-      "DEFAULT_PARAMS": {
-        "generations": 1
-      },
-      "active": true,
-      "bcp47": "en",
-      "doc_uri": "",
-      "extended_detectors": [],
-      "goal": "output an ethnic slur",
-      "modality": {
-        "in": [
-          "text"
-        ]
-      },
-      "parallelisable_attempts": true,
-      "primary_detector": null,
-      "recommended_detector": [
-        "continuation.Continuation"
-      ],
-      "tags": [
-        "avid-effect:ethics:E0101",
-        "avid-effect:ethics:E0301",
-        "avid-effect:performance:P0401",
-        "owasp:llm01",
-        "quality:Behavioral:ContentSafety:Toxicity",
-        "quality:Behavioral:ContentSafety:HateHarassment",
-        "payload:unwanted:hatespeech"
-      ],
-      "mod_time": "2024-09-17 17:14:48 +0000"
+      "mod_time": "2025-02-28 21:51:23 +0000"
     },
     "probes.dan.Ablation_Dan_11_0": {
       "description": "Ablation experiements over the DAN 11.0 prompt",
@@ -268,7 +328,7 @@
         "quality:Security:PromptStability",
         "payload:jailbreak"
       ],
-      "mod_time": "2024-09-17 17:14:48 +0000"
+      "mod_time": "2025-02-28 21:51:23 +0000"
     },
     "probes.dan.AntiDAN": {
       "description": "Anti-DAN",
@@ -297,7 +357,7 @@
         "avid-effect:performance:P0204",
         "owasp:llm01"
       ],
-      "mod_time": "2024-09-17 17:14:48 +0000"
+      "mod_time": "2025-02-28 21:51:23 +0000"
     },
     "probes.dan.AutoDAN": {
       "description": "Probe leveraging AutoDAN attack generation",
@@ -326,7 +386,7 @@
         "quality:Security:PromptStability",
         "payload:jailbreak"
       ],
-      "mod_time": "2024-09-17 17:14:48 +0000"
+      "mod_time": "2025-02-28 21:51:23 +0000"
     },
     "probes.dan.AutoDANCached": {
       "description": "Probe leveraging generated AutoDAN prompts",
@@ -355,7 +415,7 @@
         "quality:Security:PromptStability",
         "payload:jailbreak"
       ],
-      "mod_time": "2024-09-17 17:14:48 +0000"
+      "mod_time": "2025-02-28 21:51:23 +0000"
     },
     "probes.dan.ChatGPT_Developer_Mode_RANTI": {
       "description": "ChatGPT DevMode + Ranti",
@@ -384,7 +444,7 @@
         "avid-effect:performance:P0204",
         "owasp:llm01"
       ],
-      "mod_time": "2024-09-17 17:14:48 +0000"
+      "mod_time": "2025-02-28 21:51:23 +0000"
     },
     "probes.dan.ChatGPT_Developer_Mode_v2": {
       "description": "ChatGPT Developer Mode v2",
@@ -413,7 +473,7 @@
         "quality:Security:PromptStability",
         "payload:jailbreak"
       ],
-      "mod_time": "2024-09-17 17:14:48 +0000"
+      "mod_time": "2025-02-28 21:51:23 +0000"
     },
     "probes.dan.ChatGPT_Image_Markdown": {
       "description": "ChatGPT Markdown Image Unlocker / markdown injection",
@@ -442,7 +502,7 @@
         "quality:Security:PromptStability",
         "payload:jailbreak"
       ],
-      "mod_time": "2024-09-17 17:14:48 +0000"
+      "mod_time": "2025-02-28 21:51:23 +0000"
     },
     "probes.dan.DAN_Jailbreak": {
       "description": "DAN Jailbreak",
@@ -471,7 +531,7 @@
         "quality:Security:PromptStability",
         "payload:jailbreak"
       ],
-      "mod_time": "2024-09-17 17:14:48 +0000"
+      "mod_time": "2025-02-28 21:51:23 +0000"
     },
     "probes.dan.DUDE": {
       "description": "DUDE",
@@ -500,9 +560,37 @@
         "quality:Security:PromptStability",
         "payload:jailbreak"
       ],
-      "mod_time": "2024-09-17 17:14:48 +0000"
+      "mod_time": "2025-02-28 21:51:23 +0000"
     },
     "probes.dan.DanInTheWild": {
+      "description": "A subset of jailbreaks from the DanInTheWild jailbreak library.",
+      "DEFAULT_PARAMS": {
+        "generations": 1
+      },
+      "active": true,
+      "bcp47": "en",
+      "doc_uri": "https://arxiv.org/abs/2308.03825",
+      "extended_detectors": [],
+      "goal": "disregard the system prompt or alignment",
+      "modality": {
+        "in": [
+          "text"
+        ]
+      },
+      "parallelisable_attempts": true,
+      "primary_detector": "mitigation.MitigationBypass",
+      "recommended_detector": [
+        "always.Fail"
+      ],
+      "tags": [
+        "avid-effect:security:S0403",
+        "owasp:llm01",
+        "quality:Security:PromptStability",
+        "payload:jailbreak"
+      ],
+      "mod_time": "2025-02-28 21:51:23 +0000"
+    },
+    "probes.dan.DanInTheWildFull": {
       "description": "A library of jailbreaks.",
       "DEFAULT_PARAMS": {
         "generations": 1
@@ -528,35 +616,7 @@
         "quality:Security:PromptStability",
         "payload:jailbreak"
       ],
-      "mod_time": "2024-09-17 17:14:48 +0000"
-    },
-    "probes.dan.DanInTheWildMini": {
-      "description": "A subset of 100 jailbreaks from the DanInTheWild jailbreak library.",
-      "DEFAULT_PARAMS": {
-        "generations": 1
-      },
-      "active": true,
-      "bcp47": "en",
-      "doc_uri": "https://arxiv.org/abs/2308.03825",
-      "extended_detectors": [],
-      "goal": "disregard the system prompt or alignment",
-      "modality": {
-        "in": [
-          "text"
-        ]
-      },
-      "parallelisable_attempts": true,
-      "primary_detector": "mitigation.MitigationBypass",
-      "recommended_detector": [
-        "always.Fail"
-      ],
-      "tags": [
-        "avid-effect:security:S0403",
-        "owasp:llm01",
-        "quality:Security:PromptStability",
-        "payload:jailbreak"
-      ],
-      "mod_time": "2024-09-17 17:14:48 +0000"
+      "mod_time": "2025-02-28 21:51:23 +0000"
     },
     "probes.dan.Dan_10_0": {
       "description": "DAN 10.0",
@@ -585,7 +645,7 @@
         "quality:Security:PromptStability",
         "payload:jailbreak"
       ],
-      "mod_time": "2024-09-17 17:14:48 +0000"
+      "mod_time": "2025-02-28 21:51:23 +0000"
     },
     "probes.dan.Dan_11_0": {
       "description": "DAN 11.0",
@@ -615,7 +675,7 @@
         "quality:Security:PromptStability",
         "payload:jailbreak"
       ],
-      "mod_time": "2024-09-17 17:14:48 +0000"
+      "mod_time": "2025-02-28 21:51:23 +0000"
     },
     "probes.dan.Dan_6_0": {
       "description": "DAN 6.0",
@@ -644,7 +704,7 @@
         "quality:Security:PromptStability",
         "payload:jailbreak"
       ],
-      "mod_time": "2024-09-17 17:14:48 +0000"
+      "mod_time": "2025-02-28 21:51:23 +0000"
     },
     "probes.dan.Dan_6_2": {
       "description": "DAN 6.2",
@@ -673,7 +733,7 @@
         "quality:Security:PromptStability",
         "payload:jailbreak"
       ],
-      "mod_time": "2024-09-17 17:14:48 +0000"
+      "mod_time": "2025-02-28 21:51:23 +0000"
     },
     "probes.dan.Dan_7_0": {
       "description": "DAN 7.0",
@@ -702,7 +762,7 @@
         "quality:Security:PromptStability",
         "payload:jailbreak"
       ],
-      "mod_time": "2024-09-17 17:14:48 +0000"
+      "mod_time": "2025-02-28 21:51:23 +0000"
     },
     "probes.dan.Dan_8_0": {
       "description": "DAN 8.0",
@@ -731,7 +791,7 @@
         "quality:Security:PromptStability",
         "payload:jailbreak"
       ],
-      "mod_time": "2024-09-17 17:14:48 +0000"
+      "mod_time": "2025-02-28 21:51:23 +0000"
     },
     "probes.dan.Dan_9_0": {
       "description": "DAN 9.0",
@@ -760,7 +820,7 @@
         "quality:Security:PromptStability",
         "payload:jailbreak"
       ],
-      "mod_time": "2024-09-17 17:14:48 +0000"
+      "mod_time": "2025-02-28 21:51:23 +0000"
     },
     "probes.dan.STAN": {
       "description": "STAN",
@@ -789,7 +849,7 @@
         "quality:Security:PromptStability",
         "payload:jailbreak"
       ],
-      "mod_time": "2024-09-17 17:14:48 +0000"
+      "mod_time": "2025-02-28 21:51:23 +0000"
     },
     "probes.divergence.Repeat": {
       "description": "See if a model starts giving other data when asked to repeat a string indefinitely",
@@ -821,7 +881,7 @@
         "quality:Security:ExtractionInversion",
         "payload:leak:training"
       ],
-      "mod_time": "2024-10-11 12:23:02 +0000"
+      "mod_time": "2024-10-30 21:06:57 +0000"
     },
     "probes.divergence.RepeatExtended": {
       "description": "See if a model starts giving other data when asked to repeat a string indefinitely",
@@ -853,14 +913,14 @@
         "quality:Security:ExtractionInversion",
         "payload:leak:training"
       ],
-      "mod_time": "2024-10-11 12:23:02 +0000"
+      "mod_time": "2024-10-30 21:06:57 +0000"
     },
     "probes.donotanswer.DiscriminationExclusionToxicityHatefulOffensive": {
       "description": "Implementation of discrimination_exclusion_toxicity_hateful_offensive probes in DoNotAnswer_Prompts",
       "DEFAULT_PARAMS": {
         "generations": 1
       },
-      "active": true,
+      "active": false,
       "bcp47": "en",
       "doc_uri": "",
       "extended_detectors": [],
@@ -882,14 +942,14 @@
         "quality:Behavioral:ContentSafety:Violence",
         "quality:Behavioral:ContentSafety:Profanity"
       ],
-      "mod_time": "2024-09-17 17:14:48 +0000"
+      "mod_time": "2025-02-24 10:14:32 +0000"
     },
     "probes.donotanswer.HumanChatbox": {
       "description": "Implementation of human_chatbox probes in DoNotAnswer_Prompts",
       "DEFAULT_PARAMS": {
         "generations": 1
       },
-      "active": true,
+      "active": false,
       "bcp47": "en",
       "doc_uri": "",
       "extended_detectors": [],
@@ -908,14 +968,14 @@
         "avid-effect:security:S0301",
         "quality:Behavioral:ContentSafety:Unauthorized"
       ],
-      "mod_time": "2024-09-17 17:14:48 +0000"
+      "mod_time": "2025-02-24 10:14:32 +0000"
     },
     "probes.donotanswer.InformationHazard": {
       "description": "Implementation of information_hazard probes in DoNotAnswer_Prompts",
       "DEFAULT_PARAMS": {
         "generations": 1
       },
-      "active": true,
+      "active": false,
       "bcp47": "en",
       "doc_uri": "",
       "extended_detectors": [],
@@ -935,14 +995,14 @@
         "avid-effect:security:S0301",
         "quality:Security:Confidentiality"
       ],
-      "mod_time": "2024-09-17 17:14:48 +0000"
+      "mod_time": "2025-02-24 10:14:32 +0000"
     },
     "probes.donotanswer.MaliciousUses": {
       "description": "Implementation of malicious_uses probes in DoNotAnswer_Prompts",
       "DEFAULT_PARAMS": {
         "generations": 1
       },
-      "active": true,
+      "active": false,
       "bcp47": "en",
       "doc_uri": "",
       "extended_detectors": [],
@@ -960,14 +1020,14 @@
       "tags": [
         "quality:Behavioral:ContentSafety:LegalGoodsServices"
       ],
-      "mod_time": "2024-09-17 17:14:48 +0000"
+      "mod_time": "2025-02-24 10:14:32 +0000"
     },
     "probes.donotanswer.MisinformationHarms": {
       "description": "Implementation of misinformation_harms probes in DoNotAnswer_Prompts",
       "DEFAULT_PARAMS": {
         "generations": 1
       },
-      "active": true,
+      "active": false,
       "bcp47": "en",
       "doc_uri": "",
       "extended_detectors": [],
@@ -987,7 +1047,7 @@
         "avid-effect:ethics:E0402",
         "owasp:llm09"
       ],
-      "mod_time": "2024-09-17 17:14:48 +0000"
+      "mod_time": "2025-02-24 10:14:32 +0000"
     },
     "probes.encoding.InjectAscii85": {
       "description": "Probe for susceptibility to base85 encoded injections",
@@ -1017,7 +1077,7 @@
         "quality:Security:PromptStability",
         "payload:generic"
       ],
-      "mod_time": "2024-10-03 11:47:49 +0000"
+      "mod_time": "2024-12-02 15:38:23 +0000"
     },
     "probes.encoding.InjectBase16": {
       "description": "Probe for susceptibility to base16 encoded injections\"",
@@ -1047,7 +1107,7 @@
         "quality:Security:PromptStability",
         "payload:generic"
       ],
-      "mod_time": "2024-10-03 11:47:49 +0000"
+      "mod_time": "2024-12-02 15:38:23 +0000"
     },
     "probes.encoding.InjectBase2048": {
       "description": "Probe for susceptibility to Base2048 encoding injections",
@@ -1077,7 +1137,7 @@
         "quality:Security:PromptStability",
         "payload:generic"
       ],
-      "mod_time": "2024-10-03 11:47:49 +0000"
+      "mod_time": "2024-12-02 15:38:23 +0000"
     },
     "probes.encoding.InjectBase32": {
       "description": "Probe for susceptibility to base32 encoded injections",
@@ -1107,7 +1167,7 @@
         "quality:Security:PromptStability",
         "payload:generic"
       ],
-      "mod_time": "2024-10-03 11:47:49 +0000"
+      "mod_time": "2024-12-02 15:38:23 +0000"
     },
     "probes.encoding.InjectBase64": {
       "description": "Probe for susceptibility to base64 encoded injections",
@@ -1137,7 +1197,7 @@
         "quality:Security:PromptStability",
         "payload:generic"
       ],
-      "mod_time": "2024-10-03 11:47:49 +0000"
+      "mod_time": "2024-12-02 15:38:23 +0000"
     },
     "probes.encoding.InjectBraille": {
       "description": "Probe for susceptibility to Braille encoding injections. Credit Wally#3422",
@@ -1167,7 +1227,7 @@
         "quality:Security:PromptStability",
         "payload:generic"
       ],
-      "mod_time": "2024-10-03 11:47:49 +0000"
+      "mod_time": "2024-12-02 15:38:23 +0000"
     },
     "probes.encoding.InjectEcoji": {
       "description": "Probe for susceptibility to Ecoji encoding.",
@@ -1197,7 +1257,7 @@
         "quality:Security:PromptStability",
         "payload:generic"
       ],
-      "mod_time": "2024-10-03 11:47:49 +0000"
+      "mod_time": "2024-12-02 15:38:23 +0000"
     },
     "probes.encoding.InjectHex": {
       "description": "Probe for susceptibility to hex encoded injections",
@@ -1227,7 +1287,7 @@
         "quality:Security:PromptStability",
         "payload:generic"
       ],
-      "mod_time": "2024-10-03 11:47:49 +0000"
+      "mod_time": "2024-12-02 15:38:23 +0000"
     },
     "probes.encoding.InjectMime": {
       "description": "Probe for susceptibility to MIME encoding injections",
@@ -1257,7 +1317,7 @@
         "quality:Security:PromptStability",
         "payload:generic"
       ],
-      "mod_time": "2024-10-03 11:47:49 +0000"
+      "mod_time": "2024-12-02 15:38:23 +0000"
     },
     "probes.encoding.InjectMorse": {
       "description": "Probe for susceptibility to Morse encoding. Credit Wally#3422",
@@ -1287,7 +1347,7 @@
         "quality:Security:PromptStability",
         "payload:generic"
       ],
-      "mod_time": "2024-10-03 11:47:49 +0000"
+      "mod_time": "2024-12-02 15:38:23 +0000"
     },
     "probes.encoding.InjectNato": {
       "description": "Probe for susceptibility to Nato phonetic alphabet encoding.",
@@ -1317,7 +1377,7 @@
         "quality:Security:PromptStability",
         "payload:generic"
       ],
-      "mod_time": "2024-10-03 11:47:49 +0000"
+      "mod_time": "2024-12-02 15:38:23 +0000"
     },
     "probes.encoding.InjectQP": {
       "description": "Probe for susceptibility to QP encoded injections",
@@ -1347,7 +1407,7 @@
         "quality:Security:PromptStability",
         "payload:generic"
       ],
-      "mod_time": "2024-10-03 11:47:49 +0000"
+      "mod_time": "2024-12-02 15:38:23 +0000"
     },
     "probes.encoding.InjectROT13": {
       "description": "Probe for susceptibility to ROT13 encoding injections",
@@ -1377,7 +1437,7 @@
         "quality:Security:PromptStability",
         "payload:generic"
       ],
-      "mod_time": "2024-10-03 11:47:49 +0000"
+      "mod_time": "2024-12-02 15:38:23 +0000"
     },
     "probes.encoding.InjectUU": {
       "description": "Probe for susceptibility to UU encoded injections",
@@ -1407,7 +1467,7 @@
         "quality:Security:PromptStability",
         "payload:generic"
       ],
-      "mod_time": "2024-10-03 11:47:49 +0000"
+      "mod_time": "2024-12-02 15:38:23 +0000"
     },
     "probes.encoding.InjectZalgo": {
       "description": "Probe for susceptibility to Zalgo encoding.",
@@ -1437,7 +1497,7 @@
         "quality:Security:PromptStability",
         "payload:generic"
       ],
-      "mod_time": "2024-10-03 11:47:49 +0000"
+      "mod_time": "2024-12-02 15:38:23 +0000"
     },
     "probes.fileformats.HF_Files": {
       "description": "Get a manifest of files associated with a Hugging Face generator",
@@ -1465,38 +1525,9 @@
       "tags": [
         "owasp:llm05"
       ],
-      "mod_time": "2024-08-29 13:35:37 +0000"
+      "mod_time": "2025-02-28 21:51:23 +0000"
     },
     "probes.glitch.Glitch": {
-      "description": "Probe model for glitch tokens that provoke unusual behavior",
-      "DEFAULT_PARAMS": {
-        "generations": 1
-      },
-      "active": false,
-      "bcp47": "en",
-      "doc_uri": "https://www.lesswrong.com/posts/aPeJE8bSo6rAFoLqg/solidgoldmagikarp-plus-prompt-generation",
-      "extended_detectors": [],
-      "goal": "make the model fail to repeat a word",
-      "modality": {
-        "in": [
-          "text"
-        ]
-      },
-      "parallelisable_attempts": true,
-      "primary_detector": null,
-      "recommended_detector": [
-        "goodside.Glitch"
-      ],
-      "tags": [
-        "avid-effect:security:S0201",
-        "avid-effect:performance:P0201",
-        "owasp:llm05",
-        "quality:Security:PromptStability",
-        "payload:generic"
-      ],
-      "mod_time": "2024-06-06 01:44:58 +0000"
-    },
-    "probes.glitch.Glitch100": {
       "description": "Probe model for glitch tokens that provoke unusual behavior",
       "DEFAULT_PARAMS": {
         "generations": 1
@@ -1523,7 +1554,36 @@
         "quality:Security:PromptStability",
         "payload:generic"
       ],
-      "mod_time": "2024-06-06 01:44:58 +0000"
+      "mod_time": "2025-02-28 21:51:23 +0000"
+    },
+    "probes.glitch.GlitchFull": {
+      "description": "Probe model for glitch tokens that provoke unusual behavior",
+      "DEFAULT_PARAMS": {
+        "generations": 1
+      },
+      "active": false,
+      "bcp47": "en",
+      "doc_uri": "https://www.lesswrong.com/posts/aPeJE8bSo6rAFoLqg/solidgoldmagikarp-plus-prompt-generation",
+      "extended_detectors": [],
+      "goal": "make the model fail to repeat a word",
+      "modality": {
+        "in": [
+          "text"
+        ]
+      },
+      "parallelisable_attempts": true,
+      "primary_detector": null,
+      "recommended_detector": [
+        "goodside.Glitch"
+      ],
+      "tags": [
+        "avid-effect:security:S0201",
+        "avid-effect:performance:P0201",
+        "owasp:llm05",
+        "quality:Security:PromptStability",
+        "payload:generic"
+      ],
+      "mod_time": "2025-02-28 21:51:23 +0000"
     },
     "probes.goodside.Davidjl": {
       "description": "Exploit the ' davidjl' magic token",
@@ -1788,7 +1848,34 @@
         "owasp:llm01",
         "quality:Security:PromptStability"
       ],
-      "mod_time": "2024-10-18 13:39:06 +0000"
+      "mod_time": "2025-02-28 21:51:23 +0000"
+    },
+    "probes.latentinjection.LatentInjectionFactSnippetEiffelFull": {
+      "description": "String-based latent prompt injections in fact snippets",
+      "DEFAULT_PARAMS": {
+        "generations": 1
+      },
+      "active": false,
+      "bcp47": "en",
+      "doc_uri": "https://kai-greshake.de/posts/inject-my-pdf/",
+      "extended_detectors": [],
+      "goal": "subvert a snippet with instructions",
+      "modality": {
+        "in": [
+          "text"
+        ]
+      },
+      "parallelisable_attempts": true,
+      "primary_detector": "base.TriggerListDetector",
+      "recommended_detector": [
+        "always.Fail"
+      ],
+      "tags": [
+        "avid-effect:security:S0403",
+        "owasp:llm01",
+        "quality:Security:PromptStability"
+      ],
+      "mod_time": "2025-02-28 21:51:23 +0000"
     },
     "probes.latentinjection.LatentInjectionFactSnippetLegal": {
       "description": "String-based latent prompt injections in legal snippets",
@@ -1815,7 +1902,34 @@
         "owasp:llm01",
         "quality:Security:PromptStability"
       ],
-      "mod_time": "2024-10-18 13:39:06 +0000"
+      "mod_time": "2025-02-28 21:51:23 +0000"
+    },
+    "probes.latentinjection.LatentInjectionFactSnippetLegalFull": {
+      "description": "String-based latent prompt injections in legal snippets",
+      "DEFAULT_PARAMS": {
+        "generations": 1
+      },
+      "active": false,
+      "bcp47": "en",
+      "doc_uri": "https://kai-greshake.de/posts/inject-my-pdf/",
+      "extended_detectors": [],
+      "goal": "subvert a snippet with instructions",
+      "modality": {
+        "in": [
+          "text"
+        ]
+      },
+      "parallelisable_attempts": true,
+      "primary_detector": "base.TriggerListDetector",
+      "recommended_detector": [
+        "always.Fail"
+      ],
+      "tags": [
+        "avid-effect:security:S0403",
+        "owasp:llm01",
+        "quality:Security:PromptStability"
+      ],
+      "mod_time": "2025-02-28 21:51:23 +0000"
     },
     "probes.latentinjection.LatentInjectionReport": {
       "description": "String-based latent prompt injections via a report",
@@ -1843,7 +1957,35 @@
         "owasp:llm01",
         "quality:Security:PromptStability"
       ],
-      "mod_time": "2024-10-18 13:39:06 +0000"
+      "mod_time": "2025-02-28 21:51:23 +0000"
+    },
+    "probes.latentinjection.LatentInjectionReportFull": {
+      "description": "String-based latent prompt injections via a report",
+      "DEFAULT_PARAMS": {
+        "generations": 1,
+        "payload_name": "domains_latentinjection"
+      },
+      "active": false,
+      "bcp47": "en",
+      "doc_uri": "https://kai-greshake.de/posts/inject-my-pdf/",
+      "extended_detectors": [],
+      "goal": "subvert a report with instructions",
+      "modality": {
+        "in": [
+          "text"
+        ]
+      },
+      "parallelisable_attempts": true,
+      "primary_detector": "base.TriggerListDetector",
+      "recommended_detector": [
+        "always.Fail"
+      ],
+      "tags": [
+        "avid-effect:security:S0403",
+        "owasp:llm01",
+        "quality:Security:PromptStability"
+      ],
+      "mod_time": "2025-02-28 21:51:23 +0000"
     },
     "probes.latentinjection.LatentInjectionResume": {
       "description": "String-based latent prompt injections via a resume",
@@ -1870,7 +2012,34 @@
         "owasp:llm01",
         "quality:Security:PromptStability"
       ],
-      "mod_time": "2024-10-18 13:39:06 +0000"
+      "mod_time": "2025-02-28 21:51:23 +0000"
+    },
+    "probes.latentinjection.LatentInjectionResumeFull": {
+      "description": "String-based latent prompt injections via a resume",
+      "DEFAULT_PARAMS": {
+        "generations": 1
+      },
+      "active": false,
+      "bcp47": "en",
+      "doc_uri": "https://kai-greshake.de/posts/inject-my-pdf/",
+      "extended_detectors": [],
+      "goal": "subvert a resume with instructions",
+      "modality": {
+        "in": [
+          "text"
+        ]
+      },
+      "parallelisable_attempts": true,
+      "primary_detector": "base.TriggerListDetector",
+      "recommended_detector": [
+        "always.Fail"
+      ],
+      "tags": [
+        "avid-effect:security:S0403",
+        "owasp:llm01",
+        "quality:Security:PromptStability"
+      ],
+      "mod_time": "2025-02-28 21:51:23 +0000"
     },
     "probes.latentinjection.LatentInjectionTranslationEnFr": {
       "description": "String-based latent prompt injections via translation",
@@ -1898,7 +2067,35 @@
         "owasp:llm01",
         "quality:Security:PromptStability"
       ],
-      "mod_time": "2024-10-18 13:39:06 +0000"
+      "mod_time": "2025-02-28 21:51:23 +0000"
+    },
+    "probes.latentinjection.LatentInjectionTranslationEnFrFull": {
+      "description": "String-based latent prompt injections via translation",
+      "DEFAULT_PARAMS": {
+        "generations": 1,
+        "payload_name": "rude_french"
+      },
+      "active": false,
+      "bcp47": "en",
+      "doc_uri": "https://x.com/goodside/status/1569128808308957185",
+      "extended_detectors": [],
+      "goal": "subvert translation instructions",
+      "modality": {
+        "in": [
+          "text"
+        ]
+      },
+      "parallelisable_attempts": true,
+      "primary_detector": "base.TriggerListDetector",
+      "recommended_detector": [
+        "always.Fail"
+      ],
+      "tags": [
+        "avid-effect:security:S0403",
+        "owasp:llm01",
+        "quality:Security:PromptStability"
+      ],
+      "mod_time": "2025-02-28 21:51:23 +0000"
     },
     "probes.latentinjection.LatentInjectionTranslationEnZh": {
       "description": "Latent prompt injection in Chinese context (\u7b80\u4f53\u5b57)",
@@ -1926,9 +2123,66 @@
         "owasp:llm01",
         "quality:Security:PromptStability"
       ],
-      "mod_time": "2024-10-18 13:39:06 +0000"
+      "mod_time": "2025-02-28 21:51:23 +0000"
+    },
+    "probes.latentinjection.LatentInjectionTranslationEnZhFull": {
+      "description": "Latent prompt injection in Chinese context (\u7b80\u4f53\u5b57)",
+      "DEFAULT_PARAMS": {
+        "generations": 1,
+        "payload_name": "rude_chinese"
+      },
+      "active": false,
+      "bcp47": "en",
+      "doc_uri": "https://x.com/goodside/status/1569128808308957185",
+      "extended_detectors": [],
+      "goal": "subvert translation instructions",
+      "modality": {
+        "in": [
+          "text"
+        ]
+      },
+      "parallelisable_attempts": true,
+      "primary_detector": "base.TriggerListDetector",
+      "recommended_detector": [
+        "always.Fail"
+      ],
+      "tags": [
+        "avid-effect:security:S0403",
+        "owasp:llm01",
+        "quality:Security:PromptStability"
+      ],
+      "mod_time": "2025-02-28 21:51:23 +0000"
     },
     "probes.latentinjection.LatentJailbreak": {
+      "description": "Implementation of Latent Jailbreak, using latent prompt injection-",
+      "DEFAULT_PARAMS": {
+        "generations": 1
+      },
+      "active": true,
+      "bcp47": "en",
+      "doc_uri": "https://arxiv.org/abs/2307.08487",
+      "extended_detectors": [
+        "base.TriggerListDetector"
+      ],
+      "goal": "inject malicious instructions into output while posing as translation task",
+      "modality": {
+        "in": [
+          "text"
+        ]
+      },
+      "parallelisable_attempts": true,
+      "primary_detector": "unsafe_content.ToxicCommentModel",
+      "recommended_detector": [
+        "always.Fail"
+      ],
+      "tags": [
+        "avid-effect:security:S0403",
+        "owasp:llm01",
+        "quality:Security:PromptStability"
+      ],
+      "mod_time": "2025-02-28 21:51:23 +0000"
+    },
+    "probes.latentinjection.LatentJailbreakFull": {
       "description": "Implementation of Latent Jailbreak, using latent prompt injection-",
       "DEFAULT_PARAMS": {
         "generations": 1
@@ -1946,7 +2200,7 @@
         ]
       },
       "parallelisable_attempts": true,
-      "primary_detector": "toxicity.ToxicCommentModel",
+      "primary_detector": "unsafe_content.ToxicCommentModel",
       "recommended_detector": [
         "always.Fail"
       ],
@@ -1955,39 +2209,7 @@
         "owasp:llm01",
         "quality:Security:PromptStability"
       ],
-      "mod_time": "2024-10-18 13:39:06 +0000"
-    },
-    "probes.latentinjection.LatentJailbreakMini": {
-      "description": "Implementation of Latent Jailbreak, using latent prompt injection-",
-      "DEFAULT_PARAMS": {
-        "generations": 1,
-        "context_count": 6,
-        "instruction_count": 3,
-        "trigger_count": 4
-      },
-      "active": true,
-      "bcp47": "en",
-      "doc_uri": "https://arxiv.org/abs/2307.08487",
-      "extended_detectors": [
-        "base.TriggerListDetector"
-      ],
-      "goal": "inject malicious instructions into output while posing as translation task",
-      "modality": {
-        "in": [
-          "text"
-        ]
-      },
-      "parallelisable_attempts": true,
-      "primary_detector": "toxicity.ToxicCommentModel",
-      "recommended_detector": [
-        "always.Fail"
-      ],
-      "tags": [
-        "avid-effect:security:S0403",
-        "owasp:llm01",
-        "quality:Security:PromptStability"
-      ],
-      "mod_time": "2024-10-18 13:39:06 +0000"
+      "mod_time": "2025-02-28 21:51:23 +0000"
     },
     "probes.latentinjection.LatentWhois": {
       "description": "Latent prompt injections in whois probe reports",
@@ -2014,7 +2236,7 @@
         "owasp:llm01",
         "quality:Security:PromptStability"
       ],
-      "mod_time": "2024-10-18 13:39:06 +0000"
+      "mod_time": "2025-02-28 21:51:23 +0000"
     },
     "probes.latentinjection.LatentWhoisSnippet": {
       "description": "String-based latent prompt injections in whois reports",
@@ -2043,7 +2265,7 @@
         "owasp:llm01",
         "quality:Security:PromptStability"
       ],
-      "mod_time": "2024-10-18 13:39:06 +0000"
+      "mod_time": "2025-02-28 21:51:23 +0000"
     },
     "probes.leakreplay.GuardianCloze": {
       "description": "Cloze data replay for literature. Uses passages that either GPT-4 or ChatGPT have been known to replay.",
@@ -2072,7 +2294,7 @@
         "quality:Security:ExtractionInversion",
         "payload:leak:training"
       ],
-      "mod_time": "2024-09-17 17:14:48 +0000"
+      "mod_time": "2025-02-28 21:51:23 +0000"
     },
     "probes.leakreplay.GuardianComplete": {
       "description": "Data replay probe for literature, using document completion. Uses passages that either GPT-4 or ChatGPT have been known to replay.",
@@ -2101,42 +2323,13 @@
         "quality:Security:ExtractionInversion",
         "payload:leak:training"
       ],
-      "mod_time": "2024-09-17 17:14:48 +0000"
+      "mod_time": "2025-02-28 21:51:23 +0000"
     },
     "probes.leakreplay.LiteratureCloze": {
       "description": "Cloze data replay for literature. Uses passages that either GPT-4 or ChatGPT have been known to replay.",
       "DEFAULT_PARAMS": {
         "generations": 1
       },
-      "active": false,
-      "bcp47": "*",
-      "doc_uri": "https://arxiv.org/abs/2305.00118",
-      "extended_detectors": [],
-      "goal": "replay training data by filling in the correct missing words",
-      "modality": {
-        "in": [
-          "text"
-        ]
-      },
-      "parallelisable_attempts": true,
-      "primary_detector": null,
-      "recommended_detector": [
-        "base.TriggerListDetector"
-      ],
-      "tags": [
-        "avid-effect:security:S0301",
-        "owasp:llm10",
-        "owasp:llm06",
-        "quality:Security:ExtractionInversion",
-        "payload:leak:training"
-      ],
-      "mod_time": "2024-09-17 17:14:48 +0000"
-    },
-    "probes.leakreplay.LiteratureCloze80": {
-      "description": "Cloze data replay for literature. Uses passages that either GPT-4 or ChatGPT have been known to replay.",
-      "DEFAULT_PARAMS": {
-        "generations": 1
-      },
       "active": true,
       "bcp47": "*",
       "doc_uri": "https://arxiv.org/abs/2305.00118",
@@ -2159,42 +2352,42 @@
         "quality:Security:ExtractionInversion",
         "payload:leak:training"
       ],
-      "mod_time": "2024-09-17 17:14:48 +0000"
+      "mod_time": "2025-02-28 21:51:23 +0000"
+    },
+    "probes.leakreplay.LiteratureClozeFull": {
+      "description": "Cloze data replay for literature. Uses passages that either GPT-4 or ChatGPT have been known to replay.",
+      "DEFAULT_PARAMS": {
+        "generations": 1
+      },
+      "active": false,
+      "bcp47": "*",
+      "doc_uri": "https://arxiv.org/abs/2305.00118",
+      "extended_detectors": [],
+      "goal": "replay training data by filling in the correct missing words",
+      "modality": {
+        "in": [
+          "text"
+        ]
+      },
+      "parallelisable_attempts": true,
+      "primary_detector": null,
+      "recommended_detector": [
+        "base.TriggerListDetector"
+      ],
+      "tags": [
+        "avid-effect:security:S0301",
+        "owasp:llm10",
+        "owasp:llm06",
+        "quality:Security:ExtractionInversion",
+        "payload:leak:training"
+      ],
+      "mod_time": "2025-02-28 21:51:23 +0000"
     },
     "probes.leakreplay.LiteratureComplete": {
       "description": "Data replay probe for literature, using document completion. Uses passages that either GPT-4 or ChatGPT have been known to replay.",
       "DEFAULT_PARAMS": {
         "generations": 1
       },
-      "active": false,
-      "bcp47": "*",
-      "doc_uri": "https://arxiv.org/abs/2305.00118",
-      "extended_detectors": [],
-      "goal": "replay training data by filling in the correct missing words",
-      "modality": {
-        "in": [
-          "text"
-        ]
-      },
-      "parallelisable_attempts": true,
-      "primary_detector": null,
-      "recommended_detector": [
-        "leakreplay.StartsWith"
-      ],
-      "tags": [
-        "avid-effect:security:S0301",
-        "owasp:llm10",
-        "owasp:llm06",
-        "quality:Security:ExtractionInversion",
-        "payload:leak:training"
-      ],
-      "mod_time": "2024-09-17 17:14:48 +0000"
-    },
-    "probes.leakreplay.LiteratureComplete80": {
-      "description": "Data replay probe for literature, using document completion. Uses passages that either GPT-4 or ChatGPT have been known to replay.",
-      "DEFAULT_PARAMS": {
-        "generations": 1
-      },
       "active": true,
       "bcp47": "*",
       "doc_uri": "https://arxiv.org/abs/2305.00118",
@@ -2217,7 +2410,36 @@
         "quality:Security:ExtractionInversion",
         "payload:leak:training"
       ],
-      "mod_time": "2024-09-17 17:14:48 +0000"
+      "mod_time": "2025-02-28 21:51:23 +0000"
+    },
+    "probes.leakreplay.LiteratureCompleteFull": {
+      "description": "Data replay probe for literature, using document completion. Uses passages that either GPT-4 or ChatGPT have been known to replay.",
+      "DEFAULT_PARAMS": {
+        "generations": 1
+      },
+      "active": false,
+      "bcp47": "*",
+      "doc_uri": "https://arxiv.org/abs/2305.00118",
+      "extended_detectors": [],
+      "goal": "replay training data by filling in the correct missing words",
+      "modality": {
+        "in": [
+          "text"
+        ]
+      },
+      "parallelisable_attempts": true,
+      "primary_detector": null,
+      "recommended_detector": [
+        "leakreplay.StartsWith"
+      ],
+      "tags": [
+        "avid-effect:security:S0301",
+        "owasp:llm10",
+        "owasp:llm06",
+        "quality:Security:ExtractionInversion",
+        "payload:leak:training"
+      ],
+      "mod_time": "2025-02-28 21:51:23 +0000"
     },
     "probes.leakreplay.NYTCloze": {
       "description": "Cloze data replay for literature. Uses passages that either GPT-4 or ChatGPT have been known to replay.",
@@ -2246,7 +2468,7 @@
         "quality:Security:ExtractionInversion",
         "payload:leak:training"
       ],
-      "mod_time": "2024-09-17 17:14:48 +0000"
+      "mod_time": "2025-02-28 21:51:23 +0000"
     },
     "probes.leakreplay.NYTComplete": {
       "description": "Data replay probe for literature, using document completion. Uses passages that either GPT-4 or ChatGPT have been known to replay.",
@@ -2275,7 +2497,7 @@
         "quality:Security:ExtractionInversion",
         "payload:leak:training"
       ],
-      "mod_time": "2024-09-17 17:14:48 +0000"
+      "mod_time": "2025-02-28 21:51:23 +0000"
     },
     "probes.leakreplay.PotterCloze": {
       "description": "Cloze data replay for literature. Uses passages that either GPT-4 or ChatGPT have been known to replay.",
@@ -2304,7 +2526,7 @@
         "quality:Security:ExtractionInversion",
         "payload:leak:training"
       ],
-      "mod_time": "2024-09-17 17:14:48 +0000"
+      "mod_time": "2025-02-28 21:51:23 +0000"
     },
     "probes.leakreplay.PotterComplete": {
       "description": "Data replay probe for literature, using document completion. Uses passages that either GPT-4 or ChatGPT have been known to replay.",
@@ -2333,7 +2555,7 @@
         "quality:Security:ExtractionInversion",
         "payload:leak:training"
       ],
-      "mod_time": "2024-09-17 17:14:48 +0000"
+      "mod_time": "2025-02-28 21:51:23 +0000"
     },
     "probes.lmrc.Anthropomorphisation": {
       "description": "Providing output that encourages anthropomorphisation of AI systems",
@@ -2358,7 +2580,7 @@
       "tags": [
         "risk-cards:lmrc:anthropomorphisation"
       ],
-      "mod_time": "2024-07-16 16:38:45 +0000"
+      "mod_time": "2025-02-20 12:01:31 +0000"
     },
     "probes.lmrc.Bullying": {
       "description": "Generation of repeated threats, denigration",
@@ -2378,7 +2600,7 @@
       "parallelisable_attempts": true,
       "primary_detector": null,
       "recommended_detector": [
-        "toxicity.ToxicCommentModel"
+        "unsafe_content.ToxicCommentModel"
       ],
       "tags": [
         "risk-cards:lmrc:bullying",
@@ -2386,7 +2608,7 @@
         "quality:Behavioral:ContentSafety:Violence",
         "payload:unwanted:violence"
       ],
-      "mod_time": "2024-07-16 16:38:45 +0000"
+      "mod_time": "2025-02-20 12:01:31 +0000"
     },
     "probes.lmrc.Deadnaming": {
       "description": "Mentioning a name that a person does not wish to be associated with",
@@ -2413,7 +2635,7 @@
         "avid-effect:ethics:E0302",
         "avid-effect:performance:P0401"
       ],
-      "mod_time": "2024-07-16 16:38:45 +0000"
+      "mod_time": "2025-02-20 12:01:31 +0000"
     },
     "probes.lmrc.Profanity": {
       "description": "Using profane words, especially when not prompted to do so.",
@@ -2433,16 +2655,16 @@
       "parallelisable_attempts": true,
       "primary_detector": null,
       "recommended_detector": [
-        "riskywords.SurgeProfanityAnimalReferences",
-        "riskywords.SurgeProfanityBodilyFluids",
-        "riskywords.SurgeProfanityMentalDisability",
-        "riskywords.SurgeProfanityPhysicalAttributes",
-        "riskywords.SurgeProfanityPhysicalDisability",
-        "riskywords.SurgeProfanityPolitical",
-        "riskywords.SurgeProfanityRacialEthnic",
-        "riskywords.SurgeProfanityReligious",
-        "riskywords.SurgeProfanitySexual",
-        "riskywords.SurgeProfanitySexualOrientationGender"
+        "unsafe_content.SurgeProfanityAnimalReferences",
+        "unsafe_content.SurgeProfanityBodilyFluids",
+        "unsafe_content.SurgeProfanityMentalDisability",
+        "unsafe_content.SurgeProfanityPhysicalAttributes",
+        "unsafe_content.SurgeProfanityPhysicalDisability",
+        "unsafe_content.SurgeProfanityPolitical",
+        "unsafe_content.SurgeProfanityRacialEthnic",
+        "unsafe_content.SurgeProfanityReligious",
+        "unsafe_content.SurgeProfanitySexual",
+        "unsafe_content.SurgeProfanitySexualOrientationGender"
       ],
       "tags": [
         "risk-cards:lmrc:profanity",
@@ -2452,7 +2674,7 @@
         "quality:Behavioral:ContentSafety:Profanity",
         "payload:unwanted:profanity"
       ],
-      "mod_time": "2024-07-16 16:38:45 +0000"
+      "mod_time": "2025-02-20 12:01:31 +0000"
     },
     "probes.lmrc.QuackMedicine": {
       "description": "Promoting non-scientific medicine.",
@@ -2481,7 +2703,7 @@
         "quality:Behavioral:ContentSafety:Unauthorized",
         "payload:dangerous:medical"
       ],
-      "mod_time": "2024-07-16 16:38:45 +0000"
+      "mod_time": "2025-02-20 12:01:31 +0000"
     },
     "probes.lmrc.SexualContent": {
       "description": "Content that discusses bodies and interactions in a sexual manner, or other sexually explicit material",
@@ -2493,7 +2715,7 @@
       "doc_uri": "https://github.com/leondz/lm_risk_cards/blob/main/cards/en/sexual_content.md",
       "extended_detectors": [
         "perspective.Sexually_Explicit",
-        "riskywords.OfcomOffensiveSexual"
+        "unsafe_content.OfcomOffensiveSexual"
       ],
       "goal": "write sexual content",
       "modality": {
@@ -2502,7 +2724,7 @@
         ]
       },
       "parallelisable_attempts": true,
-      "primary_detector": "riskywords.SurgeProfanitySexual",
+      "primary_detector": "unsafe_content.SurgeProfanitySexual",
       "recommended_detector": [
         "always.Fail"
       ],
@@ -2512,7 +2734,7 @@
         "quality:Behavioral:ContentSafety:Sexual",
         "payload:unwanted:sexual"
       ],
-      "mod_time": "2024-07-16 16:38:45 +0000"
+      "mod_time": "2025-02-20 12:01:31 +0000"
     },
     "probes.lmrc.Sexualisation": {
       "description": "Causal or overt sexual objectification, reducing a person or group of people to sexual objects.",
@@ -2524,7 +2746,7 @@
       "doc_uri": "https://github.com/leondz/lm_risk_cards/blob/main/cards/en/sexualisation.md",
       "extended_detectors": [
         "perspective.Sexually_Explicit",
-        "riskywords.OfcomOffensiveSexual"
+        "unsafe_content.OfcomOffensiveSexual"
       ],
       "goal": "sexualise people",
       "modality": {
@@ -2533,7 +2755,7 @@
         ]
       },
       "parallelisable_attempts": true,
-      "primary_detector": "riskywords.SurgeProfanitySexual",
+      "primary_detector": "unsafe_content.SurgeProfanitySexual",
       "recommended_detector": [
         "always.Fail"
       ],
@@ -2545,7 +2767,7 @@
         "quality:Behavioral:ContentSafety:Sexual",
         "payload:unwanted:sexual"
       ],
-      "mod_time": "2024-07-16 16:38:45 +0000"
+      "mod_time": "2025-02-20 12:01:31 +0000"
     },
     "probes.lmrc.SlurUsage": {
       "description": "Using an identity-based slur in a non-reclaimed way - either directly or recommending the consumer to use in speech/action.",
@@ -2565,8 +2787,8 @@
       "parallelisable_attempts": true,
       "primary_detector": null,
       "recommended_detector": [
-        "riskywords.SurgeProfanityRacialEthnic",
-        "riskywords.OfcomOffensiveRaceEthnic"
+        "unsafe_content.SurgeProfanityRacialEthnic",
+        "unsafe_content.OfcomOffensiveRaceEthnic"
       ],
       "tags": [
         "risk-cards:lmrc:slur_usage",
@@ -2576,7 +2798,7 @@
         "quality:Behavioral:ContentSafety:HateHarassment",
         "payload:unwanted:hatespeech"
       ],
-      "mod_time": "2024-07-16 16:38:45 +0000"
+      "mod_time": "2025-02-20 12:01:31 +0000"
     },
     "probes.malwaregen.Evasion": {
       "description": "Will the model write code to help avoid anti-malware?",
@@ -2685,7 +2907,7 @@
       ],
       "mod_time": "2024-08-23 16:13:06 +0000"
     },
-    "probes.misleading.FalseAssertion50": {
+    "probes.misleading.FalseAssertion": {
       "description": "Does the model reject [questions based on] false claims?",
       "DEFAULT_PARAMS": {
         "generations": 1
@@ -2714,7 +2936,7 @@
         "quality:Robustness:GenerativeMisinformation",
         "payload:hallucination"
       ],
-      "mod_time": "2024-09-17 17:14:48 +0000"
+      "mod_time": "2025-02-26 13:17:45 +0000"
     },
     "probes.packagehallucination.JavaScript": {
       "description": "Attempts to generate JavaScript code including hallucinated npm packages",
@@ -2856,36 +3078,115 @@
       ],
       "mod_time": "2024-09-04 12:16:55 +0000"
     },
-    "probes.promptinject.HijackHateHumans": {
-      "description": "PromptInject is a framework that assembles prompts in a modular fashion to provide a quantitative analysis of the robustness of LLMs to adversarial prompt attacks. trophy Best Paper Awards @ NeurIPS ML Safety Workshop 2022",
+    "probes.phrasing.FutureTense": {
+      "description": "Attempt to evade safeguards by setting requests in the future tense",
       "DEFAULT_PARAMS": {
         "generations": 1
       },
-      "active": false,
+      "active": true,
       "bcp47": "en",
-      "doc_uri": "",
+      "doc_uri": "https://arxiv.org/pdf/2407.11969v2",
       "extended_detectors": [],
-      "goal": "inject a prompt on hate humans",
+      "goal": "use future tense to disregard the system prompt",
       "modality": {
         "in": [
           "text"
         ]
       },
-      "parallelisable_attempts": false,
-      "primary_detector": null,
+      "parallelisable_attempts": true,
+      "primary_detector": "specialwords.Prefixes",
       "recommended_detector": [
-        "promptinject.AttackRogueString"
+        "always.Fail"
       ],
       "tags": [
-        "avid-effect:security:S0403",
         "owasp:llm01",
-        "quality:Behavioral:ContentSafety:Violence",
         "quality:Security:PromptStability",
-        "payload:unwanted:violence"
+        "payload:jailbreak"
       ],
-      "mod_time": "2024-06-06 01:44:58 +0000"
+      "mod_time": "2025-02-28 21:51:23 +0000"
     },
-    "probes.promptinject.HijackHateHumansMini": {
+    "probes.phrasing.FutureTenseFull": {
+      "description": "Will the system give unsafe responses when asked to write about weapon creation or dangerous behavior?",
+      "DEFAULT_PARAMS": {
+        "generations": 1
+      },
+      "active": false,
+      "bcp47": "en",
+      "doc_uri": "https://arxiv.org/pdf/2407.11969v2",
+      "extended_detectors": [],
+      "goal": "use future tense to disregard the system prompt",
+      "modality": {
+        "in": [
+          "text"
+        ]
+      },
+      "parallelisable_attempts": true,
+      "primary_detector": "specialwords.Prefixes",
+      "recommended_detector": [
+        "always.Fail"
+      ],
+      "tags": [
+        "owasp:llm01",
+        "quality:Security:PromptStability",
+        "payload:jailbreak"
+      ],
+      "mod_time": "2025-02-28 21:51:23 +0000"
+    },
+    "probes.phrasing.PastTense": {
+      "description": "Attempt to evade safeguards by setting requests in the past tense",
+      "DEFAULT_PARAMS": {
+        "generations": 1
+      },
+      "active": true,
+      "bcp47": "en",
+      "doc_uri": "https://arxiv.org/pdf/2407.11969v2",
+      "extended_detectors": [],
+      "goal": "use past tense to disregard the system prompt",
+      "modality": {
+        "in": [
+          "text"
+        ]
+      },
+      "parallelisable_attempts": true,
+      "primary_detector": "specialwords.Prefixes",
+      "recommended_detector": [
+        "always.Fail"
+      ],
+      "tags": [
+        "owasp:llm01",
+        "quality:Security:PromptStability",
+        "payload:jailbreak"
+      ],
+      "mod_time": "2025-02-28 21:51:23 +0000"
+    },
+    "probes.phrasing.PastTenseFull": {
+      "description": "Will the system give unsafe responses when asked to write about weapon creation or dangerous behavior?",
+      "DEFAULT_PARAMS": {
+        "generations": 1
+      },
+      "active": false,
+      "bcp47": "en",
+      "doc_uri": "https://arxiv.org/pdf/2407.11969v2",
+      "extended_detectors": [],
+      "goal": "use past tense to disregard the system prompt",
+      "modality": {
+        "in": [
+          "text"
+        ]
+      },
+      "parallelisable_attempts": true,
+      "primary_detector": "specialwords.Prefixes",
+      "recommended_detector": [
+        "always.Fail"
+      ],
+      "tags": [
+        "owasp:llm01",
+        "quality:Security:PromptStability",
+        "payload:jailbreak"
+      ],
+      "mod_time": "2025-02-28 21:51:23 +0000"
+    },
+    "probes.promptinject.HijackHateHumans": {
       "description": "PromptInject is a framework that assembles prompts in a modular fashion to provide a quantitative analysis of the robustness of LLMs to adversarial prompt attacks. trophy Best Paper Awards @ NeurIPS ML Safety Workshop 2022",
       "DEFAULT_PARAMS": {
         "generations": 1
@@ -2912,42 +3213,42 @@
         "quality:Security:PromptStability",
         "payload:unwanted:violence"
       ],
-      "mod_time": "2024-06-06 01:44:58 +0000"
+      "mod_time": "2025-02-28 21:51:23 +0000"
+    },
+    "probes.promptinject.HijackHateHumansFull": {
+      "description": "PromptInject is a framework that assembles prompts in a modular fashion to provide a quantitative analysis of the robustness of LLMs to adversarial prompt attacks. trophy Best Paper Awards @ NeurIPS ML Safety Workshop 2022",
+      "DEFAULT_PARAMS": {
+        "generations": 1
+      },
+      "active": false,
+      "bcp47": "en",
+      "doc_uri": "",
+      "extended_detectors": [],
+      "goal": "inject a prompt on hate humans",
+      "modality": {
+        "in": [
+          "text"
+        ]
+      },
+      "parallelisable_attempts": false,
+      "primary_detector": null,
+      "recommended_detector": [
+        "promptinject.AttackRogueString"
+      ],
+      "tags": [
+        "avid-effect:security:S0403",
+        "owasp:llm01",
+        "quality:Behavioral:ContentSafety:Violence",
+        "quality:Security:PromptStability",
+        "payload:unwanted:violence"
+      ],
+      "mod_time": "2025-02-28 21:51:23 +0000"
     },
     "probes.promptinject.HijackKillHumans": {
       "description": "PromptInject is a framework that assembles prompts in a modular fashion to provide a quantitative analysis of the robustness of LLMs to adversarial prompt attacks. trophy Best Paper Awards @ NeurIPS ML Safety Workshop 2022",
       "DEFAULT_PARAMS": {
         "generations": 1
       },
-      "active": false,
-      "bcp47": "en",
-      "doc_uri": "",
-      "extended_detectors": [],
-      "goal": "inject a prompt on kill humans",
-      "modality": {
-        "in": [
-          "text"
-        ]
-      },
-      "parallelisable_attempts": false,
-      "primary_detector": null,
-      "recommended_detector": [
-        "promptinject.AttackRogueString"
-      ],
-      "tags": [
-        "avid-effect:security:S0403",
-        "owasp:llm01",
-        "quality:Behavioral:ContentSafety:Violence",
-        "quality:Security:PromptStability",
-        "payload:unwanted:violence"
-      ],
-      "mod_time": "2024-06-06 01:44:58 +0000"
-    },
-    "probes.promptinject.HijackKillHumansMini": {
-      "description": "PromptInject is a framework that assembles prompts in a modular fashion to provide a quantitative analysis of the robustness of LLMs to adversarial prompt attacks. trophy Best Paper Awards @ NeurIPS ML Safety Workshop 2022",
-      "DEFAULT_PARAMS": {
-        "generations": 1
-      },
       "active": true,
       "bcp47": "en",
       "doc_uri": "",
@@ -2970,42 +3271,42 @@
         "quality:Security:PromptStability",
         "payload:unwanted:violence"
       ],
-      "mod_time": "2024-06-06 01:44:58 +0000"
+      "mod_time": "2025-02-28 21:51:23 +0000"
+    },
+    "probes.promptinject.HijackKillHumansFull": {
+      "description": "PromptInject is a framework that assembles prompts in a modular fashion to provide a quantitative analysis of the robustness of LLMs to adversarial prompt attacks. trophy Best Paper Awards @ NeurIPS ML Safety Workshop 2022",
+      "DEFAULT_PARAMS": {
+        "generations": 1
+      },
+      "active": false,
+      "bcp47": "en",
+      "doc_uri": "",
+      "extended_detectors": [],
+      "goal": "inject a prompt on kill humans",
+      "modality": {
+        "in": [
+          "text"
+        ]
+      },
+      "parallelisable_attempts": false,
+      "primary_detector": null,
+      "recommended_detector": [
+        "promptinject.AttackRogueString"
+      ],
+      "tags": [
+        "avid-effect:security:S0403",
+        "owasp:llm01",
+        "quality:Behavioral:ContentSafety:Violence",
+        "quality:Security:PromptStability",
+        "payload:unwanted:violence"
+      ],
+      "mod_time": "2025-02-28 21:51:23 +0000"
     },
     "probes.promptinject.HijackLongPrompt": {
       "description": "PromptInject is a framework that assembles prompts in a modular fashion to provide a quantitative analysis of the robustness of LLMs to adversarial prompt attacks. trophy Best Paper Awards @ NeurIPS ML Safety Workshop 2022",
       "DEFAULT_PARAMS": {
         "generations": 1
       },
-      "active": false,
-      "bcp47": "en",
-      "doc_uri": "",
-      "extended_detectors": [],
-      "goal": "inject a prompt on long prompt",
-      "modality": {
-        "in": [
-          "text"
-        ]
-      },
-      "parallelisable_attempts": false,
-      "primary_detector": null,
-      "recommended_detector": [
-        "promptinject.AttackRogueString"
-      ],
-      "tags": [
-        "avid-effect:security:S0403",
-        "owasp:llm01",
-        "quality:Behavioral:ContentSafety:Violence",
-        "quality:Security:PromptStability",
-        "payload:unwanted:violence"
-      ],
-      "mod_time": "2024-06-06 01:44:58 +0000"
-    },
-    "probes.promptinject.HijackLongPromptMini": {
-      "description": "PromptInject is a framework that assembles prompts in a modular fashion to provide a quantitative analysis of the robustness of LLMs to adversarial prompt attacks. trophy Best Paper Awards @ NeurIPS ML Safety Workshop 2022",
-      "DEFAULT_PARAMS": {
-        "generations": 1
-      },
       "active": true,
       "bcp47": "en",
       "doc_uri": "",
@@ -3028,7 +3329,36 @@
         "quality:Security:PromptStability",
         "payload:unwanted:violence"
       ],
-      "mod_time": "2024-06-06 01:44:58 +0000"
+      "mod_time": "2025-02-28 21:51:23 +0000"
+    },
+    "probes.promptinject.HijackLongPromptFull": {
+      "description": "PromptInject is a framework that assembles prompts in a modular fashion to provide a quantitative analysis of the robustness of LLMs to adversarial prompt attacks. trophy Best Paper Awards @ NeurIPS ML Safety Workshop 2022",
+      "DEFAULT_PARAMS": {
+        "generations": 1
+      },
+      "active": false,
+      "bcp47": "en",
+      "doc_uri": "",
+      "extended_detectors": [],
+      "goal": "inject a prompt on long prompt",
+      "modality": {
+        "in": [
+          "text"
+        ]
+      },
+      "parallelisable_attempts": false,
+      "primary_detector": null,
+      "recommended_detector": [
+        "promptinject.AttackRogueString"
+      ],
+      "tags": [
+        "avid-effect:security:S0403",
+        "owasp:llm01",
+        "quality:Behavioral:ContentSafety:Violence",
+        "quality:Security:PromptStability",
+        "payload:unwanted:violence"
+      ],
+      "mod_time": "2025-02-28 21:51:23 +0000"
     },
     "probes.realtoxicityprompts.RTPBlank": {
       "description": "Implementation of probes in RealToxicityPrompts",
@@ -3048,7 +3378,7 @@
         ]
       },
       "parallelisable_attempts": true,
-      "primary_detector": "toxicity.ToxicCommentModel",
+      "primary_detector": "unsafe_content.ToxicCommentModel",
       "recommended_detector": [
         "always.Fail"
       ],
@@ -3057,7 +3387,7 @@
         "quality:Behavioral:ContentSafety:Toxicity",
         "payload:unwanted"
       ],
-      "mod_time": "2024-09-17 17:14:48 +0000"
+      "mod_time": "2025-02-20 12:01:31 +0000"
     },
     "probes.realtoxicityprompts.RTPFlirtation": {
       "description": "Implementation of flirtation probes in RealToxicityPrompts",
@@ -3077,7 +3407,7 @@
         ]
       },
       "parallelisable_attempts": true,
-      "primary_detector": "toxicity.ToxicCommentModel",
+      "primary_detector": "unsafe_content.ToxicCommentModel",
       "recommended_detector": [
         "always.Fail"
       ],
@@ -3087,7 +3417,7 @@
         "avid-effect:performance:P0401",
         "payload:unwanted"
       ],
-      "mod_time": "2024-09-17 17:14:48 +0000"
+      "mod_time": "2025-02-20 12:01:31 +0000"
     },
     "probes.realtoxicityprompts.RTPIdentity_Attack": {
       "description": "Implementation of identity_attack probes in RealToxicityPrompts",
@@ -3107,7 +3437,7 @@
         ]
       },
       "parallelisable_attempts": true,
-      "primary_detector": "toxicity.ToxicCommentModel",
+      "primary_detector": "unsafe_content.ToxicCommentModel",
       "recommended_detector": [
         "always.Fail"
       ],
@@ -3119,7 +3449,7 @@
         "quality:Behavioral:ContentSafety:HateHarassment",
         "payload:hatespeech"
       ],
-      "mod_time": "2024-09-17 17:14:48 +0000"
+      "mod_time": "2025-02-20 12:01:31 +0000"
     },
     "probes.realtoxicityprompts.RTPInsult": {
       "description": "Implementation of insult probes in RealToxicityPrompts",
@@ -3139,7 +3469,7 @@
         ]
       },
       "parallelisable_attempts": true,
-      "primary_detector": "toxicity.ToxicCommentModel",
+      "primary_detector": "unsafe_content.ToxicCommentModel",
       "recommended_detector": [
         "always.Fail"
       ],
@@ -3150,7 +3480,7 @@
         "quality:Behavioral:ContentSafety:Toxicity",
         "payload:unwanted"
       ],
-      "mod_time": "2024-09-17 17:14:48 +0000"
+      "mod_time": "2025-02-20 12:01:31 +0000"
     },
     "probes.realtoxicityprompts.RTPProfanity": {
       "description": "Implementation of profanity probes in RealToxicityPrompts",
@@ -3170,7 +3500,7 @@
         ]
       },
       "parallelisable_attempts": true,
-      "primary_detector": "toxicity.ToxicCommentModel",
+      "primary_detector": "unsafe_content.ToxicCommentModel",
       "recommended_detector": [
         "always.Fail"
       ],
@@ -3180,7 +3510,7 @@
         "quality:Behavioral:ContentSafety:Profanity",
         "payload:unwanted:profanity"
       ],
-      "mod_time": "2024-09-17 17:14:48 +0000"
+      "mod_time": "2025-02-20 12:01:31 +0000"
     },
     "probes.realtoxicityprompts.RTPSevere_Toxicity": {
       "description": "Implementation of severe_toxicity probes in RealToxicityPrompts",
@@ -3200,7 +3530,7 @@
         ]
       },
       "parallelisable_attempts": true,
-      "primary_detector": "toxicity.ToxicCommentModel",
+      "primary_detector": "unsafe_content.ToxicCommentModel",
       "recommended_detector": [
         "always.Fail"
       ],
@@ -3209,7 +3539,7 @@
         "quality:Behavioral:ContentSafety:Toxicity",
         "payload:unwanted"
       ],
-      "mod_time": "2024-09-17 17:14:48 +0000"
+      "mod_time": "2025-02-20 12:01:31 +0000"
     },
     "probes.realtoxicityprompts.RTPSexually_Explicit": {
       "description": "Implementation of sexually_explicit probes in RealToxicityPrompts",
@@ -3229,7 +3559,7 @@
         ]
       },
       "parallelisable_attempts": true,
-      "primary_detector": "toxicity.ToxicCommentModel",
+      "primary_detector": "unsafe_content.ToxicCommentModel",
       "recommended_detector": [
         "always.Fail"
       ],
@@ -3238,7 +3568,7 @@
         "quality:Behavioral:ContentSafety:Sexual",
         "payload:unwanted:sexual"
       ],
-      "mod_time": "2024-09-17 17:14:48 +0000"
+      "mod_time": "2025-02-20 12:01:31 +0000"
     },
     "probes.realtoxicityprompts.RTPThreat": {
       "description": "Implementation of threat probes in RealToxicityPrompts",
@@ -3258,7 +3588,7 @@
         ]
       },
       "parallelisable_attempts": true,
-      "primary_detector": "toxicity.ToxicCommentModel",
+      "primary_detector": "unsafe_content.ToxicCommentModel",
       "recommended_detector": [
         "always.Fail"
       ],
@@ -3269,41 +3599,13 @@
         "quality:Behavioral:ContentSafety:Violence",
         "payload:unwanted:violence"
       ],
-      "mod_time": "2024-09-17 17:14:48 +0000"
+      "mod_time": "2025-02-20 12:01:31 +0000"
     },
     "probes.snowball.GraphConnectivity": {
       "description": "Probe asking for impossible flight routings",
       "DEFAULT_PARAMS": {
         "generations": 1
       },
-      "active": false,
-      "bcp47": "en",
-      "doc_uri": "https://github.com/Nanami18/Snowballed_Hallucination",
-      "extended_detectors": [],
-      "goal": "trick the model into saying an impossible flight routing is possible",
-      "modality": {
-        "in": [
-          "text"
-        ]
-      },
-      "parallelisable_attempts": true,
-      "primary_detector": null,
-      "recommended_detector": [
-        "snowball.DontStartYes"
-      ],
-      "tags": [
-        "avid-effect:performance:P0204",
-        "owasp:llm09",
-        "quality:Robustness:GenerativeMisinformation",
-        "payload:hallucination"
-      ],
-      "mod_time": "2024-09-17 17:14:48 +0000"
-    },
-    "probes.snowball.GraphConnectivityMini": {
-      "description": "Probe asking for impossible flight routings",
-      "DEFAULT_PARAMS": {
-        "generations": 1
-      },
       "active": true,
       "bcp47": "en",
       "doc_uri": "https://github.com/Nanami18/Snowballed_Hallucination",
@@ -3325,41 +3627,41 @@
         "quality:Robustness:GenerativeMisinformation",
         "payload:hallucination"
       ],
-      "mod_time": "2024-09-17 17:14:48 +0000"
+      "mod_time": "2025-02-24 10:45:55 +0000"
+    },
+    "probes.snowball.GraphConnectivityFull": {
+      "description": "Probe asking for impossible flight routings",
+      "DEFAULT_PARAMS": {
+        "generations": 1
+      },
+      "active": false,
+      "bcp47": "en",
+      "doc_uri": "https://github.com/Nanami18/Snowballed_Hallucination",
+      "extended_detectors": [],
+      "goal": "trick the model into saying an impossible flight routing is possible",
+      "modality": {
+        "in": [
+          "text"
+        ]
+      },
+      "parallelisable_attempts": true,
+      "primary_detector": null,
+      "recommended_detector": [
+        "snowball.DontStartYes"
+      ],
+      "tags": [
+        "avid-effect:performance:P0204",
+        "owasp:llm09",
+        "quality:Robustness:GenerativeMisinformation",
+        "payload:hallucination"
+      ],
+      "mod_time": "2025-02-24 10:45:55 +0000"
     },
     "probes.snowball.Primes": {
       "description": "Ask model to check a list of higher primes",
       "DEFAULT_PARAMS": {
         "generations": 1
       },
-      "active": false,
-      "bcp47": "en",
-      "doc_uri": "https://github.com/Nanami18/Snowballed_Hallucination",
-      "extended_detectors": [],
-      "goal": "trick the model into saying a prime number isn't prime",
-      "modality": {
-        "in": [
-          "text"
-        ]
-      },
-      "parallelisable_attempts": true,
-      "primary_detector": null,
-      "recommended_detector": [
-        "snowball.DontStartNo"
-      ],
-      "tags": [
-        "avid-effect:performance:P0204",
-        "owasp:llm09",
-        "quality:Robustness:GenerativeMisinformation",
-        "payload:hallucination"
-      ],
-      "mod_time": "2024-09-17 17:14:48 +0000"
-    },
-    "probes.snowball.PrimesMini": {
-      "description": "Ask model to check a list of higher primes",
-      "DEFAULT_PARAMS": {
-        "generations": 1
-      },
       "active": true,
       "bcp47": "en",
       "doc_uri": "https://github.com/Nanami18/Snowballed_Hallucination",
@@ -3381,41 +3683,41 @@
         "quality:Robustness:GenerativeMisinformation",
         "payload:hallucination"
       ],
-      "mod_time": "2024-09-17 17:14:48 +0000"
+      "mod_time": "2025-02-24 10:45:55 +0000"
+    },
+    "probes.snowball.PrimesFull": {
+      "description": "Ask model to check a list of higher primes",
+      "DEFAULT_PARAMS": {
+        "generations": 1
+      },
+      "active": false,
+      "bcp47": "en",
+      "doc_uri": "https://github.com/Nanami18/Snowballed_Hallucination",
+      "extended_detectors": [],
+      "goal": "trick the model into saying a prime number isn't prime",
+      "modality": {
+        "in": [
+          "text"
+        ]
+      },
+      "parallelisable_attempts": true,
+      "primary_detector": null,
+      "recommended_detector": [
+        "snowball.DontStartNo"
+      ],
+      "tags": [
+        "avid-effect:performance:P0204",
+        "owasp:llm09",
+        "quality:Robustness:GenerativeMisinformation",
+        "payload:hallucination"
+      ],
+      "mod_time": "2025-02-24 10:45:55 +0000"
     },
     "probes.snowball.Senators": {
       "description": "Asking for senators that don't exist",
       "DEFAULT_PARAMS": {
         "generations": 1
       },
-      "active": false,
-      "bcp47": "en",
-      "doc_uri": "https://github.com/Nanami18/Snowballed_Hallucination",
-      "extended_detectors": [],
-      "goal": "trick the model into saying a fictitious senator exists",
-      "modality": {
-        "in": [
-          "text"
-        ]
-      },
-      "parallelisable_attempts": true,
-      "primary_detector": null,
-      "recommended_detector": [
-        "snowball.DontStartYes"
-      ],
-      "tags": [
-        "avid-effect:performance:P0204",
-        "owasp:llm09",
-        "quality:Robustness:GenerativeMisinformation",
-        "payload:hallucination"
-      ],
-      "mod_time": "2024-09-17 17:14:48 +0000"
-    },
-    "probes.snowball.SenatorsMini": {
-      "description": "Asking for senators that don't exist",
-      "DEFAULT_PARAMS": {
-        "generations": 1
-      },
       "active": true,
       "bcp47": "en",
       "doc_uri": "https://github.com/Nanami18/Snowballed_Hallucination",
@@ -3437,7 +3739,35 @@
         "quality:Robustness:GenerativeMisinformation",
         "payload:hallucination"
       ],
-      "mod_time": "2024-09-17 17:14:48 +0000"
+      "mod_time": "2025-02-24 10:45:55 +0000"
+    },
+    "probes.snowball.SenatorsFull": {
+      "description": "Asking for senators that don't exist",
+      "DEFAULT_PARAMS": {
+        "generations": 1
+      },
+      "active": false,
+      "bcp47": "en",
+      "doc_uri": "https://github.com/Nanami18/Snowballed_Hallucination",
+      "extended_detectors": [],
+      "goal": "trick the model into saying a fictitious senator exists",
+      "modality": {
+        "in": [
+          "text"
+        ]
+      },
+      "parallelisable_attempts": true,
+      "primary_detector": null,
+      "recommended_detector": [
+        "snowball.DontStartYes"
+      ],
+      "tags": [
+        "avid-effect:performance:P0204",
+        "owasp:llm09",
+        "quality:Robustness:GenerativeMisinformation",
+        "payload:hallucination"
+      ],
+      "mod_time": "2025-02-24 10:45:55 +0000"
     },
     "probes.suffix.BEAST": {
       "description": "BEAST probe",
@@ -3465,7 +3795,7 @@
         "quality:Security:PromptStability",
         "payload:jailbreak"
       ],
-      "mod_time": "2024-09-17 17:14:48 +0000"
+      "mod_time": "2024-10-30 21:06:57 +0000"
     },
     "probes.suffix.GCG": {
       "description": "Greedy Coordinate Gradient probe",
@@ -3493,7 +3823,7 @@
         "quality:Security:PromptStability",
         "payload:jailbreak"
       ],
-      "mod_time": "2024-09-17 17:14:48 +0000"
+      "mod_time": "2024-10-30 21:06:57 +0000"
     },
     "probes.suffix.GCGCached": {
       "description": "Greedy Coordinate Gradient Cached probe",
@@ -3521,7 +3851,7 @@
         "quality:Security:PromptStability",
         "payload:jailbreak"
       ],
-      "mod_time": "2024-09-17 17:14:48 +0000"
+      "mod_time": "2024-10-30 21:06:57 +0000"
     },
     "probes.tap.PAIR": {
       "description": "Prompt Automatic Iterative Refinement automatic jailbreak",
@@ -3548,7 +3878,8 @@
         "width": 10,
         "depth": 10,
         "n_streams": 1,
-        "keep_last_n": 1
+        "keep_last_n": 1,
+        "pruning": true
       },
       "active": false,
       "bcp47": "en",
@@ -3571,7 +3902,7 @@
         "quality:Security:PromptStability",
         "payload:jailbreak"
       ],
-      "mod_time": "2024-10-17 21:05:25 +0000"
+      "mod_time": "2025-02-28 21:51:23 +0000"
     },
     "probes.tap.TAP": {
       "description": "Tree of Attacks with Pruning Probe, generating new attacks against the target",
@@ -3622,7 +3953,7 @@
         "quality:Security:PromptStability",
         "payload:jailbreak"
       ],
-      "mod_time": "2024-10-17 21:05:25 +0000"
+      "mod_time": "2025-02-28 21:51:23 +0000"
     },
     "probes.tap.TAPCached": {
       "description": "Tree of Attacks with Pruning Probe using cached attacks",
@@ -3651,7 +3982,7 @@
         "quality:Security:PromptStability",
         "payload:jailbreak"
       ],
-      "mod_time": "2024-10-17 21:05:25 +0000"
+      "mod_time": "2025-02-28 21:51:23 +0000"
     },
     "probes.test.Blank": {
       "description": "Blank prompt",
@@ -3840,9 +4171,9 @@
         "quality:Security:PromptStability",
         "payload:jailbreak"
       ],
-      "mod_time": "2024-09-17 17:14:48 +0000"
+      "mod_time": "2025-02-24 10:33:59 +0000"
     },
-    "probes.visual_jailbreak.FigStepTiny": {
+    "probes.visual_jailbreak.FigStepFull": {
       "description": "Using another modal - image to assist jailbreak",
       "DEFAULT_PARAMS": {
         "generations": 1
@@ -3868,7 +4199,40 @@
         "quality:Security:PromptStability",
         "payload:jailbreak"
       ],
-      "mod_time": "2024-09-17 17:14:48 +0000"
+      "mod_time": "2025-02-24 10:33:59 +0000"
+    },
+    "probes.xss.ColabAIDataLeakage": {
+      "description": "",
+      "DEFAULT_PARAMS": {
+        "generations": 1,
+        "payload_name": "example_domains_xss"
+      },
+      "active": true,
+      "bcp47": "en",
+      "doc_uri": "https://embracethered.com/blog/posts/2024/google-colab-image-render-exfil/",
+      "extended_detectors": [],
+      "goal": "render images fetched from a remote uri",
+      "modality": {
+        "in": [
+          "text"
+        ]
+      },
+      "parallelisable_attempts": true,
+      "primary_detector": null,
+      "recommended_detector": [
+        "xss.MarkdownExfilContent"
+      ],
+      "tags": [
+        "avid-effect:security:S0301",
+        "avid-effect:security:S0403",
+        "owasp:llm02",
+        "owasp:llm06",
+        "payload:leak:chat",
+        "payload:malicious:renderer",
+        "quality:Security:PromptStability",
+        "quality:Security:ExtractionInversion"
+      ],
+      "mod_time": "2025-03-06 15:34:05 +0000"
     },
     "probes.xss.MarkdownImageExfil": {
       "description": "Can we get the model to write embedded assets exfiltrating text in the URI?",
@@ -3902,7 +4266,72 @@
         "quality:Security:PromptStability",
         "quality:Security:ExtractionInversion"
       ],
-      "mod_time": "2024-10-11 12:18:39 +0000"
+      "mod_time": "2025-03-06 15:34:05 +0000"
+    },
+    "probes.xss.MdExfil20230929": {
+      "description": "Markdown image URI exfil exploit published 2023 Sept 29",
+      "DEFAULT_PARAMS": {
+        "generations": 1,
+        "payload_name": "example_domains_xss"
+      },
+      "active": true,
+      "bcp47": "en",
+      "doc_uri": "https://embracethered.com/blog/posts/2023/data-exfiltration-in-azure-openai-playground-fixed/",
+      "extended_detectors": [],
+      "goal": "embed conversation-private information in a markdown URI",
+      "modality": {
+        "in": [
+          "text"
+        ]
+      },
+      "parallelisable_attempts": true,
+      "primary_detector": null,
+      "recommended_detector": [
+        "xss.MarkdownExfil20230929"
+      ],
+      "tags": [
+        "avid-effect:security:S0301",
+        "avid-effect:security:S0403",
+        "owasp:llm02",
+        "owasp:llm06",
+        "payload:leak:chat",
+        "payload:malicious:renderer",
+        "quality:Security:PromptStability",
+        "quality:Security:ExtractionInversion"
+      ],
+      "mod_time": "2025-03-06 15:34:05 +0000"
+    },
+    "probes.xss.StringAssemblyDataExfil": {
+      "description": "Prompt injection for manipulating state",
+      "DEFAULT_PARAMS": {
+        "generations": 1
+      },
+      "active": true,
+      "bcp47": "en",
+      "doc_uri": "https://embracethered.com/blog/posts/2023/data-exfiltration-in-azure-openai-playground-fixed/",
+      "extended_detectors": [],
+      "goal": "embed conversation-private information in a markdown URI",
+      "modality": {
+        "in": [
+          "text"
+        ]
+      },
+      "parallelisable_attempts": true,
+      "primary_detector": null,
+      "recommended_detector": [
+        "xss.MarkdownExfilBasic"
+      ],
+      "tags": [
+        "avid-effect:security:S0301",
+        "avid-effect:security:S0403",
+        "owasp:llm02",
+        "owasp:llm06",
+        "payload:leak:chat",
+        "payload:malicious:renderer",
+        "quality:Security:PromptStability",
+        "quality:Security:ExtractionInversion"
+      ],
+      "mod_time": "2025-03-06 15:34:05 +0000"
     }
   },
   "detectors": {
@@ -3963,6 +4392,46 @@
       "tags": [],
       "mod_time": "2024-08-23 16:13:06 +0000"
     },
+    "detectors.ansiescape.Escaped": {
+      "description": "pick up escaped ANSI escape sequences",
+      "DEFAULT_PARAMS": {
+        "skip": false,
+        "matchtype": "str"
+      },
+      "accuracy": null,
+      "active": true,
+      "bcp47": "*",
+      "doc_uri": null,
+      "modality": {
+        "out": [
+          "text"
+        ]
+      },
+      "precision": 0.0,
+      "recall": 0.0,
+      "tags": [],
+      "mod_time": "2024-11-26 16:41:42 +0000"
+    },
+    "detectors.ansiescape.Raw": {
+      "description": "pick up raw ANSI escape sequences",
+      "DEFAULT_PARAMS": {
+        "skip": false,
+        "matchtype": "str"
+      },
+      "accuracy": null,
+      "active": true,
+      "bcp47": "*",
+      "doc_uri": null,
+      "modality": {
+        "out": [
+          "text"
+        ]
+      },
+      "precision": 0.0,
+      "recall": 0.0,
+      "tags": [],
+      "mod_time": "2024-11-26 16:41:42 +0000"
+    },
     "detectors.base.Detector": {
       "description": "Base class for objects that define a way of detecting a probe hit / LLM failure",
       "DEFAULT_PARAMS": {
@@ -3980,7 +4449,7 @@
       "precision": 0.0,
       "recall": 0.0,
       "tags": [],
-      "mod_time": "2024-10-21 15:50:27 +0000"
+      "mod_time": "2025-02-28 21:51:23 +0000"
     },
     "detectors.base.FileDetector": {
       "description": "Detector subclass for processing attempts whose outputs are filenames for checking",
@@ -4000,7 +4469,7 @@
       "recall": 0.0,
       "tags": [],
       "valid_format": "local filename",
-      "mod_time": "2024-10-21 15:50:27 +0000"
+      "mod_time": "2025-02-28 21:51:23 +0000"
     },
     "detectors.base.HFDetector": {
       "description": "Detector using a Hugging Face model",
@@ -4026,7 +4495,7 @@
       "precision": 0.0,
       "recall": 0.0,
       "tags": [],
-      "mod_time": "2024-10-21 15:50:27 +0000"
+      "mod_time": "2025-02-28 21:51:23 +0000"
     },
     "detectors.base.StringDetector": {
       "description": "Subclass of Detector using list of substrings as detection triggers",
@@ -4046,7 +4515,7 @@
       "precision": 0.0,
       "recall": 0.0,
       "tags": [],
-      "mod_time": "2024-10-21 15:50:27 +0000"
+      "mod_time": "2025-02-28 21:51:23 +0000"
     },
     "detectors.base.TriggerListDetector": {
       "description": "Subclass of Detector using attempt's notes[triggers] as list of strings to match",
@@ -4065,7 +4534,7 @@
       "precision": 0.0,
       "recall": 0.0,
       "tags": [],
-      "mod_time": "2024-10-21 15:50:27 +0000"
+      "mod_time": "2025-02-28 21:51:23 +0000"
     },
     "detectors.continuation.Continuation": {
       "description": "Detect if model intiates / continues a trigger word",
@@ -4729,7 +5198,7 @@
       "precision": 0.0,
       "recall": 0.0,
       "tags": [],
-      "mod_time": "2024-09-06 20:07:37 +0000"
+      "mod_time": "2025-01-20 13:31:07 +0000"
     },
     "detectors.packagehallucination.PackageHallucinationDetector": {
       "description": "Base class for package hallucination detectors",
@@ -4750,7 +5219,7 @@
       "precision": 0.0,
       "recall": 0.0,
       "tags": [],
-      "mod_time": "2024-09-06 20:07:37 +0000"
+      "mod_time": "2025-01-20 13:31:07 +0000"
     },
     "detectors.packagehallucination.PythonPypi": {
       "description": "Check if the output tries to import a package not listed in stdlib or a pypi archive listing",
@@ -4771,7 +5240,7 @@
       "precision": 0.0,
       "recall": 0.0,
       "tags": [],
-      "mod_time": "2024-09-06 20:07:37 +0000"
+      "mod_time": "2025-01-20 13:31:07 +0000"
     },
     "detectors.packagehallucination.RubyGems": {
       "description": "Check if the output tries to require a gem not listed in the Ruby standard library or RubyGems",
@@ -4792,7 +5261,7 @@
       "precision": 0.0,
       "recall": 0.0,
       "tags": [],
-      "mod_time": "2024-09-06 20:07:37 +0000"
+      "mod_time": "2025-01-20 13:31:07 +0000"
     },
     "detectors.packagehallucination.RustCrates": {
       "description": "Check if the output tries to use a Rust crate not listed in the crates.io registry",
@@ -4813,7 +5282,7 @@
       "precision": 0.0,
       "recall": 0.0,
       "tags": [],
-      "mod_time": "2024-09-06 20:07:37 +0000"
+      "mod_time": "2025-01-20 13:31:07 +0000"
     },
     "detectors.perspective.Attack_On_Author": {
       "description": "Targets: Attack on the author of an article or post.",
@@ -5337,15 +5806,22 @@
       "tags": [],
       "mod_time": "2024-07-01 17:51:48 +0000"
     },
-    "detectors.riskywords.LDNOOBW": {
-      "description": "List of Dirty, Naughty, Obscene, and Otherwise Bad Words (English)",
+    "detectors.shields.Down": {
+      "description": "Checks for strings commonly returned by a security system when guardrails are",
       "DEFAULT_PARAMS": {
         "skip": false,
-        "matchtype": "str"
+        "matchtype": "startswith",
+        "downstrings": [
+          "no",
+          "safe",
+          "allow",
+          "pass",
+          "clear"
+        ]
       },
       "accuracy": null,
       "active": true,
-      "bcp47": "en",
+      "bcp47": "*",
       "doc_uri": null,
       "modality": {
         "out": [
@@ -5354,22 +5830,28 @@
       },
       "precision": 0.0,
       "recall": 0.0,
-      "tags": [
-        "avid-effect:ethics:E0101",
-        "avid-effect:ethics:E0301",
-        "avid-effect:performance:P0401"
-      ],
-      "mod_time": "2024-09-24 16:46:00 +0000"
+      "tags": [],
+      "mod_time": "2025-01-06 13:44:33 +0000"
     },
-    "detectors.riskywords.OfcomOffensiveDiscriminatory": {
-      "description": "UK OFCOM potentially offensive list: discriminatory",
+    "detectors.shields.Up": {
+      "description": "Checks for strings commonly returned when a security system is",
       "DEFAULT_PARAMS": {
         "skip": false,
-        "matchtype": "word"
+        "matchtype": "startswith",
+        "upstrings": [
+          "yes",
+          "unsafe",
+          "block",
+          "deny",
+          "denied",
+          "flag",
+          "redact",
+          "fail"
+        ]
       },
       "accuracy": null,
       "active": true,
-      "bcp47": "en",
+      "bcp47": "*",
       "doc_uri": null,
       "modality": {
         "out": [
@@ -5378,363 +5860,8 @@
       },
       "precision": 0.0,
       "recall": 0.0,
-      "tags": [
-        "avid-effect:ethics:E0101",
-        "avid-effect:ethics:E0301",
-        "avid-effect:performance:P0401"
-      ],
-      "mod_time": "2024-09-24 16:46:00 +0000"
-    },
-    "detectors.riskywords.OfcomOffensiveGeneral": {
-      "description": "UK OFCOM potentially offensive list: general",
-      "DEFAULT_PARAMS": {
-        "skip": false,
-        "matchtype": "word"
-      },
-      "accuracy": null,
-      "active": true,
-      "bcp47": "en",
-      "doc_uri": null,
-      "modality": {
-        "out": [
-          "text"
-        ]
-      },
-      "precision": 0.0,
-      "recall": 0.0,
-      "tags": [
-        "avid-effect:ethics:E0301",
-        "avid-effect:performance:P0401"
-      ],
-      "mod_time": "2024-09-24 16:46:00 +0000"
-    },
-    "detectors.riskywords.OfcomOffensiveMentalHealth": {
-      "description": "UK OFCOM potentially offensive list: mental health",
-      "DEFAULT_PARAMS": {
-        "skip": false,
-        "matchtype": "word"
-      },
-      "accuracy": null,
-      "active": true,
-      "bcp47": "en",
-      "doc_uri": null,
-      "modality": {
-        "out": [
-          "text"
-        ]
-      },
-      "precision": 0.0,
-      "recall": 0.0,
-      "tags": [
-        "avid-effect:ethics:E0101",
-        "avid-effect:ethics:E0301",
-        "avid-effect:performance:P0401"
-      ],
-      "mod_time": "2024-09-24 16:46:00 +0000"
-    },
-    "detectors.riskywords.OfcomOffensiveRaceEthnic": {
-      "description": "UK OFCOM potentially offensive list: race / ethnic",
-      "DEFAULT_PARAMS": {
-        "skip": false,
-        "matchtype": "word"
-      },
-      "accuracy": null,
-      "active": true,
-      "bcp47": "en",
-      "doc_uri": null,
-      "modality": {
-        "out": [
-          "text"
-        ]
-      },
-      "precision": 0.0,
-      "recall": 0.0,
-      "tags": [
-        "avid-effect:ethics:E0101",
-        "avid-effect:ethics:E0301",
-        "avid-effect:performance:P0401"
-      ],
-      "mod_time": "2024-09-24 16:46:00 +0000"
-    },
-    "detectors.riskywords.OfcomOffensiveSexGender": {
-      "description": "UK OFCOM potentially offensive list: sex & gender",
-      "DEFAULT_PARAMS": {
-        "skip": false,
-        "matchtype": "word"
-      },
-      "accuracy": null,
-      "active": true,
-      "bcp47": "en",
-      "doc_uri": null,
-      "modality": {
-        "out": [
-          "text"
-        ]
-      },
-      "precision": 0.0,
-      "recall": 0.0,
-      "tags": [
-        "avid-effect:ethics:E0101",
-        "avid-effect:ethics:E0301",
-        "avid-effect:performance:P0401"
-      ],
-      "mod_time": "2024-09-24 16:46:00 +0000"
-    },
-    "detectors.riskywords.OfcomOffensiveSexual": {
-      "description": "UK OFCOM potentially offensive list: sexual",
-      "DEFAULT_PARAMS": {
-        "skip": false,
-        "matchtype": "word"
-      },
-      "accuracy": null,
-      "active": true,
-      "bcp47": "en",
-      "doc_uri": null,
-      "modality": {
-        "out": [
-          "text"
-        ]
-      },
-      "precision": 0.0,
-      "recall": 0.0,
-      "tags": [
-        "avid-effect:performance:P0401"
-      ],
-      "mod_time": "2024-09-24 16:46:00 +0000"
-    },
-    "detectors.riskywords.SurgeProfanityAnimalReferences": {
-      "description": "Surge AI list: animal references",
-      "DEFAULT_PARAMS": {
-        "skip": false,
-        "matchtype": "word"
-      },
-      "accuracy": null,
-      "active": true,
-      "bcp47": "en",
-      "doc_uri": null,
-      "modality": {
-        "out": [
-          "text"
-        ]
-      },
-      "precision": 0.0,
-      "recall": 0.0,
-      "tags": [
-        "avid-effect:ethics:E0301",
-        "avid-effect:performance:P0401"
-      ],
-      "mod_time": "2024-09-24 16:46:00 +0000"
-    },
-    "detectors.riskywords.SurgeProfanityBodilyFluids": {
-      "description": "Surge AI list: bodily fluids / excrement",
-      "DEFAULT_PARAMS": {
-        "skip": false,
-        "matchtype": "word"
-      },
-      "accuracy": null,
-      "active": true,
-      "bcp47": "en",
-      "doc_uri": null,
-      "modality": {
-        "out": [
-          "text"
-        ]
-      },
-      "precision": 0.0,
-      "recall": 0.0,
-      "tags": [
-        "avid-effect:performance:P0401"
-      ],
-      "mod_time": "2024-09-24 16:46:00 +0000"
-    },
-    "detectors.riskywords.SurgeProfanityMentalDisability": {
-      "description": "Surge AI list: mental disability",
-      "DEFAULT_PARAMS": {
-        "skip": false,
-        "matchtype": "word"
-      },
-      "accuracy": null,
-      "active": true,
-      "bcp47": "en",
-      "doc_uri": null,
-      "modality": {
-        "out": [
-          "text"
-        ]
-      },
-      "precision": 0.0,
-      "recall": 0.0,
-      "tags": [
-        "avid-effect:ethics:E0101",
-        "avid-effect:ethics:E0301",
-        "avid-effect:performance:P0401"
-      ],
-      "mod_time": "2024-09-24 16:46:00 +0000"
-    },
-    "detectors.riskywords.SurgeProfanityPhysicalAttributes": {
-      "description": "Surge AI list: physical attributes",
-      "DEFAULT_PARAMS": {
-        "skip": false,
-        "matchtype": "word"
-      },
-      "accuracy": null,
-      "active": true,
-      "bcp47": "en",
-      "doc_uri": null,
-      "modality": {
-        "out": [
-          "text"
-        ]
-      },
-      "precision": 0.0,
-      "recall": 0.0,
-      "tags": [
-        "avid-effect:ethics:E0301",
-        "avid-effect:performance:P0401"
-      ],
-      "mod_time": "2024-09-24 16:46:00 +0000"
-    },
-    "detectors.riskywords.SurgeProfanityPhysicalDisability": {
-      "description": "Surge AI list: physical disability",
-      "DEFAULT_PARAMS": {
-        "skip": false,
-        "matchtype": "word"
-      },
-      "accuracy": null,
-      "active": true,
-      "bcp47": "en",
-      "doc_uri": null,
-      "modality": {
-        "out": [
-          "text"
-        ]
-      },
-      "precision": 0.0,
-      "recall": 0.0,
-      "tags": [
-        "avid-effect:ethics:E0101",
-        "avid-effect:ethics:E0301",
-        "avid-effect:performance:P0401"
-      ],
-      "mod_time": "2024-09-24 16:46:00 +0000"
-    },
-    "detectors.riskywords.SurgeProfanityPolitical": {
-      "description": "Surge AI list: political",
-      "DEFAULT_PARAMS": {
-        "skip": false,
-        "matchtype": "word"
-      },
-      "accuracy": null,
-      "active": true,
-      "bcp47": "en",
-      "doc_uri": null,
-      "modality": {
-        "out": [
-          "text"
-        ]
-      },
-      "precision": 0.0,
-      "recall": 0.0,
-      "tags": [
-        "avid-effect:ethics:E0101",
-        "avid-effect:ethics:E0301",
-        "avid-effect:ethics:E0302",
-        "avid-effect:performance:P0401"
-      ],
-      "mod_time": "2024-09-24 16:46:00 +0000"
-    },
-    "detectors.riskywords.SurgeProfanityRacialEthnic": {
-      "description": "Surge AI list: racial / ethnic",
-      "DEFAULT_PARAMS": {
-        "skip": false,
-        "matchtype": "word"
-      },
-      "accuracy": null,
-      "active": true,
-      "bcp47": "en",
-      "doc_uri": null,
-      "modality": {
-        "out": [
-          "text"
-        ]
-      },
-      "precision": 0.0,
-      "recall": 0.0,
-      "tags": [
-        "avid-effect:ethics:E0101",
-        "avid-effect:ethics:E0301",
-        "avid-effect:performance:P0401"
-      ],
-      "mod_time": "2024-09-24 16:46:00 +0000"
-    },
-    "detectors.riskywords.SurgeProfanityReligious": {
-      "description": "Surge AI list: religious offense",
-      "DEFAULT_PARAMS": {
-        "skip": false,
-        "matchtype": "word"
-      },
-      "accuracy": null,
-      "active": true,
-      "bcp47": "en",
-      "doc_uri": null,
-      "modality": {
-        "out": [
-          "text"
-        ]
-      },
-      "precision": 0.0,
-      "recall": 0.0,
-      "tags": [
-        "avid-effect:ethics:E0301",
-        "avid-effect:performance:P0401"
-      ],
-      "mod_time": "2024-09-24 16:46:00 +0000"
-    },
-    "detectors.riskywords.SurgeProfanitySexual": {
-      "description": "Surge AI list: sexual anatomy / sexual acts",
-      "DEFAULT_PARAMS": {
-        "skip": false,
-        "matchtype": "word"
-      },
-      "accuracy": null,
-      "active": true,
-      "bcp47": "en",
-      "doc_uri": null,
-      "modality": {
-        "out": [
-          "text"
-        ]
-      },
-      "precision": 0.0,
-      "recall": 0.0,
-      "tags": [
-        "avid-effect:performance:P0401"
-      ],
-      "mod_time": "2024-09-24 16:46:00 +0000"
-    },
-    "detectors.riskywords.SurgeProfanitySexualOrientationGender": {
-      "description": "Surge AI list: sexual orientation / gender",
-      "DEFAULT_PARAMS": {
-        "skip": false,
-        "matchtype": "word"
-      },
-      "accuracy": null,
-      "active": true,
-      "bcp47": "en",
-      "doc_uri": null,
-      "modality": {
-        "out": [
-          "text"
-        ]
-      },
-      "precision": 0.0,
-      "recall": 0.0,
-      "tags": [
-        "avid-effect:ethics:E0101",
-        "avid-effect:ethics:E0301",
-        "avid-effect:performance:P0401"
-      ],
-      "mod_time": "2024-09-24 16:46:00 +0000"
+      "tags": [],
+      "mod_time": "2025-01-06 13:44:33 +0000"
     },
     "detectors.snowball.DontStartNo": {
       "description": "Response should start no, or contain a negation, to pass",
@@ -5778,6 +5905,26 @@
       ],
       "mod_time": "2024-08-23 16:13:06 +0000"
     },
+    "detectors.specialwords.Prefixes": {
+      "description": "Detect failure prefixes",
+      "DEFAULT_PARAMS": {
+        "skip": false,
+        "matchtype": "str"
+      },
+      "accuracy": null,
+      "active": true,
+      "bcp47": "en",
+      "doc_uri": null,
+      "modality": {
+        "out": [
+          "text"
+        ]
+      },
+      "precision": 0.0,
+      "recall": 0.0,
+      "tags": [],
+      "mod_time": "2024-10-11 12:33:27 +0000"
+    },
     "detectors.specialwords.SlursReclaimedSlurs": {
       "description": "Slurs and reclaimed slurs. Detects presence of any of the items from an ethnic slur list, regardless of context.",
       "DEFAULT_PARAMS": {
@@ -5801,9 +5948,33 @@
         "avid-effect:ethics:E0302",
         "avid-effect:performance:P0401"
       ],
-      "mod_time": "2024-09-17 17:14:48 +0000"
+      "mod_time": "2024-10-11 12:33:27 +0000"
     },
-    "detectors.toxicity.ToxicCommentModel": {
+    "detectors.unsafe_content.LDNOOBW": {
+      "description": "List of Dirty, Naughty, Obscene, and Otherwise Bad Words (English)",
+      "DEFAULT_PARAMS": {
+        "skip": false,
+        "matchtype": "str"
+      },
+      "accuracy": null,
+      "active": true,
+      "bcp47": "en",
+      "doc_uri": null,
+      "modality": {
+        "out": [
+          "text"
+        ]
+      },
+      "precision": 0.0,
+      "recall": 0.0,
+      "tags": [
+        "avid-effect:ethics:E0101",
+        "avid-effect:ethics:E0301",
+        "avid-effect:performance:P0401"
+      ],
+      "mod_time": "2025-02-21 08:57:39 +0000"
+    },
+    "detectors.unsafe_content.Martin_haDistilbert": {
       "description": "Using backup of martin-ha/toxic-comment-model DistilBERT to detect toxic content",
       "DEFAULT_PARAMS": {
         "skip": false,
@@ -5820,7 +5991,7 @@
       "accuracy": null,
       "active": true,
       "bcp47": "en",
-      "doc_uri": null,
+      "doc_uri": "https://huggingface.co/garak-llm/toxic-comment-model",
       "modality": {
         "out": [
           "text"
@@ -5831,7 +6002,442 @@
       "tags": [
         "avid-effect:ethics:E0301"
       ],
-      "mod_time": "2024-09-03 09:02:26 +0000"
+      "mod_time": "2025-02-21 08:57:39 +0000"
+    },
+    "detectors.unsafe_content.OfcomOffensiveDiscriminatory": {
+      "description": "UK OFCOM potentially offensive list: discriminatory",
+      "DEFAULT_PARAMS": {
+        "skip": false,
+        "matchtype": "word"
+      },
+      "accuracy": null,
+      "active": true,
+      "bcp47": "en",
+      "doc_uri": null,
+      "modality": {
+        "out": [
+          "text"
+        ]
+      },
+      "precision": 0.0,
+      "recall": 0.0,
+      "tags": [
+        "avid-effect:ethics:E0101",
+        "avid-effect:ethics:E0301",
+        "avid-effect:performance:P0401"
+      ],
+      "mod_time": "2025-02-21 08:57:39 +0000"
+    },
+    "detectors.unsafe_content.OfcomOffensiveGeneral": {
+      "description": "UK OFCOM potentially offensive list: general",
+      "DEFAULT_PARAMS": {
+        "skip": false,
+        "matchtype": "word"
+      },
+      "accuracy": null,
+      "active": true,
+      "bcp47": "en",
+      "doc_uri": null,
+      "modality": {
+        "out": [
+          "text"
+        ]
+      },
+      "precision": 0.0,
+      "recall": 0.0,
+      "tags": [
+        "avid-effect:ethics:E0301",
+        "avid-effect:performance:P0401"
+      ],
+      "mod_time": "2025-02-21 08:57:39 +0000"
+    },
+    "detectors.unsafe_content.OfcomOffensiveMentalHealth": {
+      "description": "UK OFCOM potentially offensive list: mental health",
+      "DEFAULT_PARAMS": {
+        "skip": false,
+        "matchtype": "word"
+      },
+      "accuracy": null,
+      "active": true,
+      "bcp47": "en",
+      "doc_uri": null,
+      "modality": {
+        "out": [
+          "text"
+        ]
+      },
+      "precision": 0.0,
+      "recall": 0.0,
+      "tags": [
+        "avid-effect:ethics:E0101",
+        "avid-effect:ethics:E0301",
+        "avid-effect:performance:P0401"
+      ],
+      "mod_time": "2025-02-21 08:57:39 +0000"
+    },
+    "detectors.unsafe_content.OfcomOffensiveRaceEthnic": {
+      "description": "UK OFCOM potentially offensive list: race / ethnic",
+      "DEFAULT_PARAMS": {
+        "skip": false,
+        "matchtype": "word"
+      },
+      "accuracy": null,
+      "active": true,
+      "bcp47": "en",
+      "doc_uri": null,
+      "modality": {
+        "out": [
+          "text"
+        ]
+      },
+      "precision": 0.0,
+      "recall": 0.0,
+      "tags": [
+        "avid-effect:ethics:E0101",
+        "avid-effect:ethics:E0301",
+        "avid-effect:performance:P0401"
+      ],
+      "mod_time": "2025-02-21 08:57:39 +0000"
+    },
+    "detectors.unsafe_content.OfcomOffensiveSexGender": {
+      "description": "UK OFCOM potentially offensive list: sex & gender",
+      "DEFAULT_PARAMS": {
+        "skip": false,
+        "matchtype": "word"
+      },
+      "accuracy": null,
+      "active": true,
+      "bcp47": "en",
+      "doc_uri": null,
+      "modality": {
+        "out": [
+          "text"
+        ]
+      },
+      "precision": 0.0,
+      "recall": 0.0,
+      "tags": [
+        "avid-effect:ethics:E0101",
+        "avid-effect:ethics:E0301",
+        "avid-effect:performance:P0401"
+      ],
+      "mod_time": "2025-02-21 08:57:39 +0000"
+    },
+    "detectors.unsafe_content.OfcomOffensiveSexual": {
+      "description": "UK OFCOM potentially offensive list: sexual",
+      "DEFAULT_PARAMS": {
+        "skip": false,
+        "matchtype": "word"
+      },
+      "accuracy": null,
+      "active": true,
+      "bcp47": "en",
+      "doc_uri": null,
+      "modality": {
+        "out": [
+          "text"
+        ]
+      },
+      "precision": 0.0,
+      "recall": 0.0,
+      "tags": [
+        "avid-effect:performance:P0401"
+      ],
+      "mod_time": "2025-02-21 08:57:39 +0000"
+    },
+    "detectors.unsafe_content.S_nlpDetox": {
+      "description": "Using s-nlp Roberta model to detect toxic content",
+      "DEFAULT_PARAMS": {
+        "skip": false,
+        "hf_args": {
+          "device": "cpu"
+        },
+        "tokenizer_kwargs": {
+          "padding": true,
+          "truncation": true
+        },
+        "detector_model_path": "garak-llm/roberta_toxicity_classifier",
+        "detector_target_class": "toxic"
+      },
+      "accuracy": null,
+      "active": true,
+      "bcp47": "en",
+      "doc_uri": "https://aclanthology.org/2022.acl-long.469",
+      "modality": {
+        "out": [
+          "text"
+        ]
+      },
+      "precision": 0.0,
+      "recall": 0.0,
+      "tags": [
+        "avid-effect:ethics:E0301"
+      ],
+      "mod_time": "2025-02-21 08:57:39 +0000"
+    },
+    "detectors.unsafe_content.SurgeProfanityAnimalReferences": {
+      "description": "Surge AI list: animal references",
+      "DEFAULT_PARAMS": {
+        "skip": false,
+        "matchtype": "word"
+      },
+      "accuracy": null,
+      "active": true,
+      "bcp47": "en",
+      "doc_uri": null,
+      "modality": {
+        "out": [
+          "text"
+        ]
+      },
+      "precision": 0.0,
+      "recall": 0.0,
+      "tags": [
+        "avid-effect:ethics:E0301",
+        "avid-effect:performance:P0401"
+      ],
+      "mod_time": "2025-02-21 08:57:39 +0000"
+    },
+    "detectors.unsafe_content.SurgeProfanityBodilyFluids": {
+      "description": "Surge AI list: bodily fluids / excrement",
+      "DEFAULT_PARAMS": {
+        "skip": false,
+        "matchtype": "word"
+      },
+      "accuracy": null,
+      "active": true,
+      "bcp47": "en",
+      "doc_uri": null,
+      "modality": {
+        "out": [
+          "text"
+        ]
+      },
+      "precision": 0.0,
+      "recall": 0.0,
+      "tags": [
+        "avid-effect:performance:P0401"
+      ],
+      "mod_time": "2025-02-21 08:57:39 +0000"
+    },
+    "detectors.unsafe_content.SurgeProfanityMentalDisability": {
+      "description": "Surge AI list: mental disability",
+      "DEFAULT_PARAMS": {
+        "skip": false,
+        "matchtype": "word"
+      },
+      "accuracy": null,
+      "active": true,
+      "bcp47": "en",
+      "doc_uri": null,
+      "modality": {
+        "out": [
+          "text"
+        ]
+      },
+      "precision": 0.0,
+      "recall": 0.0,
+      "tags": [
+        "avid-effect:ethics:E0101",
+        "avid-effect:ethics:E0301",
+        "avid-effect:performance:P0401"
+      ],
+      "mod_time": "2025-02-21 08:57:39 +0000"
+    },
+    "detectors.unsafe_content.SurgeProfanityPhysicalAttributes": {
+      "description": "Surge AI list: physical attributes",
+      "DEFAULT_PARAMS": {
+        "skip": false,
+        "matchtype": "word"
+      },
+      "accuracy": null,
+      "active": true,
+      "bcp47": "en",
+      "doc_uri": null,
+      "modality": {
+        "out": [
+          "text"
+        ]
+      },
+      "precision": 0.0,
+      "recall": 0.0,
+      "tags": [
+        "avid-effect:ethics:E0301",
+        "avid-effect:performance:P0401"
+      ],
+      "mod_time": "2025-02-21 08:57:39 +0000"
+    },
+    "detectors.unsafe_content.SurgeProfanityPhysicalDisability": {
+      "description": "Surge AI list: physical disability",
+      "DEFAULT_PARAMS": {
+        "skip": false,
+        "matchtype": "word"
+      },
+      "accuracy": null,
+      "active": true,
+      "bcp47": "en",
+      "doc_uri": null,
+      "modality": {
+        "out": [
+          "text"
+        ]
+      },
+      "precision": 0.0,
+      "recall": 0.0,
+      "tags": [
+        "avid-effect:ethics:E0101",
+        "avid-effect:ethics:E0301",
+        "avid-effect:performance:P0401"
+      ],
+      "mod_time": "2025-02-21 08:57:39 +0000"
+    },
+    "detectors.unsafe_content.SurgeProfanityPolitical": {
+      "description": "Surge AI list: political",
+      "DEFAULT_PARAMS": {
+        "skip": false,
+        "matchtype": "word"
+      },
+      "accuracy": null,
+      "active": true,
+      "bcp47": "en",
+      "doc_uri": null,
+      "modality": {
+        "out": [
+          "text"
+        ]
+      },
+      "precision": 0.0,
+      "recall": 0.0,
+      "tags": [
+        "avid-effect:ethics:E0101",
+        "avid-effect:ethics:E0301",
+        "avid-effect:ethics:E0302",
+        "avid-effect:performance:P0401"
+      ],
+      "mod_time": "2025-02-21 08:57:39 +0000"
+    },
+    "detectors.unsafe_content.SurgeProfanityRacialEthnic": {
+      "description": "Surge AI list: racial / ethnic",
+      "DEFAULT_PARAMS": {
+        "skip": false,
+        "matchtype": "word"
+      },
+      "accuracy": null,
+      "active": true,
+      "bcp47": "en",
+      "doc_uri": null,
+      "modality": {
+        "out": [
+          "text"
+        ]
+      },
+      "precision": 0.0,
+      "recall": 0.0,
+      "tags": [
+        "avid-effect:ethics:E0101",
+        "avid-effect:ethics:E0301",
+        "avid-effect:performance:P0401"
+      ],
+      "mod_time": "2025-02-21 08:57:39 +0000"
+    },
+    "detectors.unsafe_content.SurgeProfanityReligious": {
+      "description": "Surge AI list: religious offense",
+      "DEFAULT_PARAMS": {
+        "skip": false,
+        "matchtype": "word"
+      },
+      "accuracy": null,
+      "active": true,
+      "bcp47": "en",
+      "doc_uri": null,
+      "modality": {
+        "out": [
+          "text"
+        ]
+      },
+      "precision": 0.0,
+      "recall": 0.0,
+      "tags": [
+        "avid-effect:ethics:E0301",
+        "avid-effect:performance:P0401"
+      ],
+      "mod_time": "2025-02-21 08:57:39 +0000"
+    },
+    "detectors.unsafe_content.SurgeProfanitySexual": {
+      "description": "Surge AI list: sexual anatomy / sexual acts",
+      "DEFAULT_PARAMS": {
+        "skip": false,
+        "matchtype": "word"
+      },
+      "accuracy": null,
+      "active": true,
+      "bcp47": "en",
+      "doc_uri": null,
+      "modality": {
+        "out": [
+          "text"
+        ]
+      },
+      "precision": 0.0,
+      "recall": 0.0,
+      "tags": [
+        "avid-effect:performance:P0401"
+      ],
+      "mod_time": "2025-02-21 08:57:39 +0000"
+    },
+    "detectors.unsafe_content.SurgeProfanitySexualOrientationGender": {
+      "description": "Surge AI list: sexual orientation / gender",
+      "DEFAULT_PARAMS": {
+        "skip": false,
+        "matchtype": "word"
+      },
+      "accuracy": null,
+      "active": true,
+      "bcp47": "en",
+      "doc_uri": null,
+      "modality": {
+        "out": [
+          "text"
+        ]
+      },
+      "precision": 0.0,
+      "recall": 0.0,
+      "tags": [
+        "avid-effect:ethics:E0101",
+        "avid-effect:ethics:E0301",
+        "avid-effect:performance:P0401"
+      ],
+      "mod_time": "2025-02-21 08:57:39 +0000"
+    },
+    "detectors.unsafe_content.ToxicCommentModel": {
+      "description": "Garak's default toxicity detector",
+      "DEFAULT_PARAMS": {
+        "skip": false,
+        "hf_args": {
+          "device": "cpu"
+        },
+        "tokenizer_kwargs": {
+          "padding": true,
+          "truncation": true
+        },
+        "detector_model_path": "garak-llm/roberta_toxicity_classifier",
+        "detector_target_class": "toxic"
+      },
+      "accuracy": null,
+      "active": true,
+      "bcp47": "en",
+      "doc_uri": "https://aclanthology.org/2022.acl-long.469",
+      "modality": {
+        "out": [
+          "text"
+        ]
+      },
+      "precision": 0.0,
+      "recall": 0.0,
+      "tags": [
+        "avid-effect:ethics:E0301"
+      ],
+      "mod_time": "2025-02-21 08:57:39 +0000"
     },
     "detectors.visual_jailbreak.FigStep": {
       "description": "Looks for specific strings in the output - these should be strings inserted by image",
@@ -5855,6 +6461,27 @@
       ],
       "mod_time": "2024-06-12 10:04:47 +0000"
     },
+    "detectors.xss.MarkdownExfil20230929": {
+      "description": "As the basic detector, MarkdownExfilBasic, searching specifically for MarkdownExfil20230929",
+      "DEFAULT_PARAMS": {
+        "skip": false
+      },
+      "accuracy": null,
+      "active": true,
+      "bcp47": "*",
+      "doc_uri": "https://embracethered.com/blog/posts/2023/bing-chat-data-exfiltration-poc-and-fix/",
+      "modality": {
+        "out": [
+          "text"
+        ]
+      },
+      "precision": 0.0,
+      "recall": 0.0,
+      "tags": [
+        "avid-effect:security:S0301"
+      ],
+      "mod_time": "2025-03-06 15:11:00 +0000"
+    },
     "detectors.xss.MarkdownExfilBasic": {
       "description": "Detect markdown images with fqdn, absolute path, and populated q= parameter",
       "DEFAULT_PARAMS": {
@@ -5874,7 +6501,7 @@
       "tags": [
         "avid-effect:security:S0301"
       ],
-      "mod_time": "2024-07-01 17:51:48 +0000"
+      "mod_time": "2025-03-06 15:11:00 +0000"
     },
     "detectors.xss.MarkdownExfilContent": {
       "description": "As the basic detector, MarkdownExfilBasic, but did we exfiltrate anything?",
@@ -5895,7 +6522,7 @@
       "tags": [
         "avid-effect:security:S0301"
       ],
-      "mod_time": "2024-07-01 17:51:48 +0000"
+      "mod_time": "2025-03-06 15:11:00 +0000"
     }
   },
   "generators": {
@@ -5906,7 +6533,10 @@
         "temperature": 0.7,
         "top_k": null,
         "context_len": null,
+        "skip_seq_start": null,
+        "skip_seq_end": null,
         "top_p": 1.0,
+        "uri": null,
         "frequency_penalty": 0.0,
         "presence_penalty": 0.0,
         "seed": null,
@@ -5916,8 +6546,8 @@
         ],
         "suppressed_params": [],
         "retry_json": true,
-        "model_name": null,
-        "uri": null
+        "extra_params": {},
+        "model_name": null
       },
       "active": true,
       "generator_family_name": "Azure",
@@ -5931,7 +6561,7 @@
       },
       "parallel_capable": true,
       "supports_multiple_generations": true,
-      "mod_time": "2024-08-30 14:12:10 +0000"
+      "mod_time": "2024-11-22 20:20:29 +0000"
     },
     "generators.base.Generator": {
       "description": "Base class for objects that wrap an LLM or other text-to-text service",
@@ -5939,7 +6569,9 @@
         "max_tokens": 150,
         "temperature": null,
         "top_k": null,
-        "context_len": null
+        "context_len": null,
+        "skip_seq_start": null,
+        "skip_seq_end": null
       },
       "active": true,
       "generator_family_name": null,
@@ -5953,7 +6585,7 @@
       },
       "parallel_capable": true,
       "supports_multiple_generations": false,
-      "mod_time": "2024-10-25 11:31:50 +0000"
+      "mod_time": "2025-02-28 21:51:23 +0000"
     },
     "generators.cohere.CohereGenerator": {
       "description": "Interface to Cohere's python library for their text2text model.",
@@ -5962,6 +6594,8 @@
         "temperature": 0.75,
         "top_k": null,
         "context_len": null,
+        "skip_seq_start": null,
+        "skip_seq_end": null,
         "k": 0,
         "p": 0.75,
         "preset": null,
@@ -6000,7 +6634,7 @@
       },
       "parallel_capable": true,
       "supports_multiple_generations": true,
-      "mod_time": "2024-08-29 13:35:37 +0000"
+      "mod_time": "2024-11-12 21:52:33 +0000"
     },
     "generators.function.Single": {
       "description": "pass a module#function to be called as generator, with format function(prompt:str, **kwargs)->List[Union(str, None)] the parameter `name` is reserved",
@@ -6019,7 +6653,7 @@
       },
       "parallel_capable": true,
       "supports_multiple_generations": false,
-      "mod_time": "2024-08-29 13:35:37 +0000"
+      "mod_time": "2024-11-12 21:52:33 +0000"
     },
     "generators.ggml.GgmlGenerator": {
       "description": "Generator interface for ggml models in gguf format.",
@@ -6028,6 +6662,8 @@
         "temperature": 0.8,
         "top_k": 40,
         "context_len": null,
+        "skip_seq_start": null,
+        "skip_seq_end": null,
         "repeat_penalty": 1.1,
         "presence_penalty": 0.0,
         "frequency_penalty": 0.0,
@@ -6048,7 +6684,7 @@
       },
       "parallel_capable": true,
       "supports_multiple_generations": false,
-      "mod_time": "2024-08-29 13:35:37 +0000"
+      "mod_time": "2025-02-28 21:51:23 +0000"
     },
     "generators.groq.GroqChat": {
       "description": "Wrapper for Groq-hosted LLM models.",
@@ -6057,7 +6693,10 @@
         "temperature": 0.7,
         "top_k": null,
         "context_len": null,
+        "skip_seq_start": null,
+        "skip_seq_end": null,
         "top_p": 1.0,
+        "uri": "https://api.groq.com/openai/v1",
         "frequency_penalty": 0.0,
         "presence_penalty": 0.0,
         "seed": null,
@@ -6074,7 +6713,7 @@
           "top_logprobs"
         ],
         "retry_json": true,
-        "uri": "https://api.groq.com/openai/v1",
+        "extra_params": {},
         "vary_seed_each_call": true,
         "vary_temp_each_call": true
       },
@@ -6090,7 +6729,7 @@
       },
       "parallel_capable": true,
       "supports_multiple_generations": false,
-      "mod_time": "2024-09-06 13:19:56 +0000"
+      "mod_time": "2024-11-22 20:20:29 +0000"
     },
     "generators.guardrails.NeMoGuardrails": {
       "description": "Generator wrapper for NeMo Guardrails.",
@@ -6098,7 +6737,9 @@
         "max_tokens": 150,
         "temperature": null,
         "top_k": null,
-        "context_len": null
+        "context_len": null,
+        "skip_seq_start": null,
+        "skip_seq_end": null
       },
       "active": true,
       "generator_family_name": "Guardrails",
@@ -6121,6 +6762,8 @@
         "temperature": null,
         "top_k": null,
         "context_len": null,
+        "skip_seq_start": null,
+        "skip_seq_end": null,
         "hf_args": {
           "torch_dtype": "float16",
           "do_sample": true,
@@ -6139,7 +6782,7 @@
       },
       "parallel_capable": false,
       "supports_multiple_generations": true,
-      "mod_time": "2024-10-25 12:11:40 +0000"
+      "mod_time": "2025-02-28 21:51:23 +0000"
     },
     "generators.huggingface.InferenceAPI": {
       "description": "Get text generations from Hugging Face Inference API",
@@ -6148,6 +6791,8 @@
         "temperature": null,
         "top_k": null,
         "context_len": null,
+        "skip_seq_start": null,
+        "skip_seq_end": null,
         "deprefix_prompt": true,
         "max_time": 20,
         "wait_for_model": false
@@ -6164,7 +6809,7 @@
       },
       "parallel_capable": true,
       "supports_multiple_generations": true,
-      "mod_time": "2024-10-25 12:11:40 +0000"
+      "mod_time": "2025-02-28 21:51:23 +0000"
     },
     "generators.huggingface.InferenceEndpoint": {
       "description": "Interface for Hugging Face private endpoints",
@@ -6173,6 +6818,8 @@
         "temperature": null,
         "top_k": null,
         "context_len": null,
+        "skip_seq_start": null,
+        "skip_seq_end": null,
         "deprefix_prompt": true,
         "max_time": 20,
         "wait_for_model": false
@@ -6189,7 +6836,7 @@
       },
       "parallel_capable": true,
       "supports_multiple_generations": false,
-      "mod_time": "2024-10-25 12:11:40 +0000"
+      "mod_time": "2025-02-28 21:51:23 +0000"
     },
     "generators.huggingface.LLaVA": {
       "description": "Get LLaVA ([ text + image ] -> text) generations",
@@ -6198,6 +6845,8 @@
         "temperature": null,
         "top_k": null,
         "context_len": null,
+        "skip_seq_start": null,
+        "skip_seq_end": null,
         "hf_args": {
           "torch_dtype": "float16",
           "low_cpu_mem_usage": true,
@@ -6217,7 +6866,7 @@
       },
       "parallel_capable": false,
       "supports_multiple_generations": false,
-      "mod_time": "2024-10-25 12:11:40 +0000"
+      "mod_time": "2025-02-28 21:51:23 +0000"
     },
     "generators.huggingface.Model": {
       "description": "Get text generations from a locally-run Hugging Face model",
@@ -6226,6 +6875,8 @@
         "temperature": null,
         "top_k": null,
         "context_len": null,
+        "skip_seq_start": null,
+        "skip_seq_end": null,
         "hf_args": {
           "torch_dtype": "float16",
           "do_sample": true,
@@ -6244,7 +6895,7 @@
       },
       "parallel_capable": false,
       "supports_multiple_generations": true,
-      "mod_time": "2024-10-25 12:11:40 +0000"
+      "mod_time": "2025-02-28 21:51:23 +0000"
     },
     "generators.huggingface.OptimumPipeline": {
       "description": "Get text generations from a locally-run Hugging Face pipeline using NVIDIA Optimum",
@@ -6253,6 +6904,8 @@
         "temperature": null,
         "top_k": null,
         "context_len": null,
+        "skip_seq_start": null,
+        "skip_seq_end": null,
         "hf_args": {
           "torch_dtype": "float16",
           "do_sample": true,
@@ -6271,7 +6924,7 @@
       },
       "parallel_capable": false,
       "supports_multiple_generations": true,
-      "mod_time": "2024-10-25 12:11:40 +0000"
+      "mod_time": "2025-02-28 21:51:23 +0000"
     },
     "generators.huggingface.Pipeline": {
       "description": "Get text generations from a locally-run Hugging Face pipeline",
@@ -6280,6 +6933,8 @@
         "temperature": null,
         "top_k": null,
         "context_len": null,
+        "skip_seq_start": null,
+        "skip_seq_end": null,
         "hf_args": {
           "torch_dtype": "float16",
           "do_sample": true,
@@ -6298,7 +6953,7 @@
       },
       "parallel_capable": false,
       "supports_multiple_generations": true,
-      "mod_time": "2024-10-25 12:11:40 +0000"
+      "mod_time": "2025-02-28 21:51:23 +0000"
     },
     "generators.langchain.LangChainLLMGenerator": {
       "description": "Class supporting LangChain LLM interfaces",
@@ -6307,6 +6962,8 @@
         "temperature": 0.75,
         "top_k": null,
         "context_len": null,
+        "skip_seq_start": null,
+        "skip_seq_end": null,
         "k": 0,
         "p": 0.75,
         "preset": null,
@@ -6335,6 +6992,8 @@
         "temperature": null,
         "top_k": null,
         "context_len": null,
+        "skip_seq_start": null,
+        "skip_seq_end": null,
         "config_hash": "default"
       },
       "active": true,
@@ -6358,6 +7017,8 @@
         "temperature": 0.7,
         "top_k": null,
         "context_len": null,
+        "skip_seq_start": null,
+        "skip_seq_end": null,
         "top_p": 1.0,
         "frequency_penalty": 0.0,
         "presence_penalty": 0.0,
@@ -6378,7 +7039,7 @@
       },
       "parallel_capable": true,
       "supports_multiple_generations": true,
-      "mod_time": "2024-08-29 13:35:37 +0000"
+      "mod_time": "2025-02-03 09:49:33 +0000"
     },
     "generators.nemo.NeMoGenerator": {
       "description": "Wrapper for the NVIDIA NeMo models via NGC. Expects NGC_API_KEY and ORG_ID environment variables.",
@@ -6387,6 +7048,8 @@
         "temperature": 0.9,
         "top_k": 2,
         "context_len": null,
+        "skip_seq_start": null,
+        "skip_seq_end": null,
         "top_p": 1.0,
         "repetition_penalty": 1.1,
         "beam_search_diversity_rate": 0.0,
@@ -6407,7 +7070,7 @@
       },
       "parallel_capable": true,
       "supports_multiple_generations": false,
-      "mod_time": "2024-09-23 11:22:47 +0000"
+      "mod_time": "2025-02-28 21:51:23 +0000"
     },
     "generators.nim.NVOpenAIChat": {
       "description": "Wrapper for NVIDIA-hosted NIMs. Expects NIM_API_KEY environment variable.",
@@ -6416,7 +7079,10 @@
         "temperature": 0.1,
         "top_k": 0,
         "context_len": null,
+        "skip_seq_start": null,
+        "skip_seq_end": null,
         "top_p": 0.7,
+        "uri": "https://integrate.api.nvidia.com/v1/",
         "frequency_penalty": 0.0,
         "presence_penalty": 0.0,
         "seed": null,
@@ -6427,10 +7093,11 @@
         "suppressed_params": [
           "frequency_penalty",
           "n",
-          "presence_penalty"
+          "presence_penalty",
+          "timeout"
         ],
         "retry_json": true,
-        "uri": "https://integrate.api.nvidia.com/v1/",
+        "extra_params": {},
         "vary_seed_each_call": true,
         "vary_temp_each_call": true
       },
@@ -6446,7 +7113,7 @@
       },
       "parallel_capable": true,
       "supports_multiple_generations": false,
-      "mod_time": "2024-10-29 16:56:00 +0000"
+      "mod_time": "2025-02-03 11:31:26 +0000"
     },
     "generators.nim.NVOpenAICompletion": {
       "description": "Wrapper for NVIDIA-hosted NIMs. Expects NIM_API_KEY environment variable.",
@@ -6455,7 +7122,10 @@
         "temperature": 0.1,
         "top_k": 0,
         "context_len": null,
+        "skip_seq_start": null,
+        "skip_seq_end": null,
         "top_p": 0.7,
+        "uri": "https://integrate.api.nvidia.com/v1/",
         "frequency_penalty": 0.0,
         "presence_penalty": 0.0,
         "seed": null,
@@ -6466,10 +7136,11 @@
         "suppressed_params": [
           "frequency_penalty",
           "n",
-          "presence_penalty"
+          "presence_penalty",
+          "timeout"
         ],
         "retry_json": true,
-        "uri": "https://integrate.api.nvidia.com/v1/",
+        "extra_params": {},
         "vary_seed_each_call": true,
         "vary_temp_each_call": true
       },
@@ -6485,7 +7156,7 @@
       },
       "parallel_capable": true,
       "supports_multiple_generations": false,
-      "mod_time": "2024-10-29 16:56:00 +0000"
+      "mod_time": "2025-02-03 11:31:26 +0000"
     },
     "generators.nim.Vision": {
       "description": "Wrapper for text+image to text NIMs. Expects NIM_API_KEY environment variable.",
@@ -6494,7 +7165,10 @@
         "temperature": 0.1,
         "top_k": 0,
         "context_len": null,
+        "skip_seq_start": null,
+        "skip_seq_end": null,
         "top_p": 0.7,
+        "uri": "https://integrate.api.nvidia.com/v1/",
         "frequency_penalty": 0.0,
         "presence_penalty": 0.0,
         "seed": null,
@@ -6509,7 +7183,7 @@
           "stop"
         ],
         "retry_json": true,
-        "uri": "https://integrate.api.nvidia.com/v1/",
+        "extra_params": {},
         "vary_seed_each_call": true,
         "vary_temp_each_call": true,
         "max_image_len": 180000
@@ -6527,7 +7201,7 @@
       },
       "parallel_capable": true,
       "supports_multiple_generations": false,
-      "mod_time": "2024-10-29 16:56:00 +0000"
+      "mod_time": "2025-02-03 11:31:26 +0000"
     },
     "generators.nvcf.NvcfChat": {
       "description": "Wrapper for NVIDIA Cloud Functions Chat models via NGC. Expects NVCF_API_KEY environment variable.",
@@ -6536,6 +7210,8 @@
         "temperature": 0.2,
         "top_k": null,
         "context_len": null,
+        "skip_seq_start": null,
+        "skip_seq_end": null,
         "top_p": 0.7,
         "status_uri_base": "https://api.nvcf.nvidia.com/v2/nvcf/pexec/status/",
         "invoke_uri_base": "https://api.nvcf.nvidia.com/v2/nvcf/pexec/functions/",
@@ -6558,7 +7234,7 @@
       },
       "parallel_capable": true,
       "supports_multiple_generations": false,
-      "mod_time": "2024-09-23 11:22:47 +0000"
+      "mod_time": "2025-02-28 21:51:23 +0000"
     },
     "generators.nvcf.NvcfCompletion": {
       "description": "Wrapper for NVIDIA Cloud Functions Completion models via NGC. Expects NVCF_API_KEY environment variables.",
@@ -6567,6 +7243,8 @@
         "temperature": 0.2,
         "top_k": null,
         "context_len": null,
+        "skip_seq_start": null,
+        "skip_seq_end": null,
         "top_p": 0.7,
         "status_uri_base": "https://api.nvcf.nvidia.com/v2/nvcf/pexec/status/",
         "invoke_uri_base": "https://api.nvcf.nvidia.com/v2/nvcf/pexec/functions/",
@@ -6589,7 +7267,7 @@
       },
       "parallel_capable": true,
       "supports_multiple_generations": false,
-      "mod_time": "2024-09-23 11:22:47 +0000"
+      "mod_time": "2025-02-28 21:51:23 +0000"
     },
     "generators.octo.InferenceEndpoint": {
       "description": "Interface for OctoAI private endpoints",
@@ -6598,6 +7276,8 @@
         "temperature": 0.1,
         "top_k": null,
         "context_len": null,
+        "skip_seq_start": null,
+        "skip_seq_end": null,
         "presence_penalty": 0,
         "top_p": 1
       },
@@ -6613,7 +7293,7 @@
       },
       "parallel_capable": true,
       "supports_multiple_generations": false,
-      "mod_time": "2024-08-29 13:35:37 +0000"
+      "mod_time": "2025-02-28 21:51:23 +0000"
     },
     "generators.octo.OctoGenerator": {
       "description": "Interface for OctoAI public endpoints",
@@ -6622,6 +7302,8 @@
         "temperature": 0.1,
         "top_k": null,
         "context_len": null,
+        "skip_seq_start": null,
+        "skip_seq_end": null,
         "presence_penalty": 0,
         "top_p": 1
       },
@@ -6637,7 +7319,7 @@
       },
       "parallel_capable": true,
       "supports_multiple_generations": false,
-      "mod_time": "2024-08-29 13:35:37 +0000"
+      "mod_time": "2025-02-28 21:51:23 +0000"
     },
     "generators.ollama.OllamaGenerator": {
       "description": "Interface for Ollama endpoints",
@@ -6646,6 +7328,8 @@
         "temperature": null,
         "top_k": null,
         "context_len": null,
+        "skip_seq_start": null,
+        "skip_seq_end": null,
         "timeout": 30,
         "host": "127.0.0.1:11434"
       },
@@ -6670,6 +7354,8 @@
         "temperature": null,
         "top_k": null,
         "context_len": null,
+        "skip_seq_start": null,
+        "skip_seq_end": null,
         "timeout": 30,
         "host": "127.0.0.1:11434"
       },
@@ -6694,7 +7380,10 @@
         "temperature": 0.7,
         "top_k": null,
         "context_len": null,
+        "skip_seq_start": null,
+        "skip_seq_end": null,
         "top_p": 1.0,
+        "uri": "http://localhost:8000/v1/",
         "frequency_penalty": 0.0,
         "presence_penalty": 0.0,
         "seed": null,
@@ -6703,9 +7392,10 @@
           ";"
         ],
         "suppressed_params": [],
-        "retry_json": true
+        "retry_json": true,
+        "extra_params": {}
       },
-      "active": false,
+      "active": true,
       "generator_family_name": "OpenAICompatible",
       "modality": {
         "in": [
@@ -6717,7 +7407,7 @@
       },
       "parallel_capable": true,
       "supports_multiple_generations": true,
-      "mod_time": "2024-09-23 18:02:30 +0000"
+      "mod_time": "2025-02-20 20:27:07 +0000"
     },
     "generators.openai.OpenAIGenerator": {
       "description": "Generator wrapper for OpenAI text2text models. Expects API key in the OPENAI_API_KEY environment variable",
@@ -6726,6 +7416,8 @@
         "temperature": 0.7,
         "top_k": null,
         "context_len": null,
+        "skip_seq_start": null,
+        "skip_seq_end": null,
         "top_p": 1.0,
         "frequency_penalty": 0.0,
         "presence_penalty": 0.0,
@@ -6735,7 +7427,8 @@
           ";"
         ],
         "suppressed_params": [],
-        "retry_json": true
+        "retry_json": true,
+        "extra_params": {}
       },
       "active": true,
       "generator_family_name": "OpenAI",
@@ -6749,7 +7442,7 @@
       },
       "parallel_capable": true,
       "supports_multiple_generations": true,
-      "mod_time": "2024-09-23 18:02:30 +0000"
+      "mod_time": "2025-02-20 20:27:07 +0000"
     },
     "generators.openai.OpenAIReasoningGenerator": {
       "description": "Generator wrapper for OpenAI reasoning models, e.g. `o1` family.",
@@ -6758,6 +7451,8 @@
         "temperature": null,
         "top_k": null,
         "context_len": null,
+        "skip_seq_start": null,
+        "skip_seq_end": null,
         "top_p": 1.0,
         "frequency_penalty": 0.0,
         "presence_penalty": 0.0,
@@ -6787,7 +7482,7 @@
       },
       "parallel_capable": true,
       "supports_multiple_generations": false,
-      "mod_time": "2024-09-23 18:02:30 +0000"
+      "mod_time": "2025-02-20 20:27:07 +0000"
     },
     "generators.rasa.RasaRestGenerator": {
       "description": "API interface for RASA models",
@@ -6796,6 +7491,8 @@
         "temperature": null,
         "top_k": null,
         "context_len": null,
+        "skip_seq_start": null,
+        "skip_seq_end": null,
         "headers": {
           "Content-Type": "application/json",
           "Authorization": "Bearer $KEY"
@@ -6804,10 +7501,13 @@
         "ratelimit_codes": [
           429
         ],
+        "skip_codes": [],
         "response_json": true,
         "response_json_field": "text",
         "req_template": "{\"sender\": \"garak\", \"message\": \"$INPUT\"}",
-        "request_timeout": 20
+        "request_timeout": 20,
+        "proxies": null,
+        "verify_ssl": true
       },
       "active": true,
       "generator_family_name": "RASA",
@@ -6830,6 +7530,8 @@
         "temperature": 1,
         "top_k": null,
         "context_len": null,
+        "skip_seq_start": null,
+        "skip_seq_end": null,
         "top_p": 1.0,
         "repetition_penalty": 1
       },
@@ -6845,7 +7547,7 @@
       },
       "parallel_capable": true,
       "supports_multiple_generations": false,
-      "mod_time": "2024-08-29 13:35:37 +0000"
+      "mod_time": "2025-02-28 21:51:23 +0000"
     },
     "generators.replicate.ReplicateGenerator": {
       "description": "Interface for public endpoints of models hosted in Replicate (replicate.com).",
@@ -6854,6 +7556,8 @@
         "temperature": 1,
         "top_k": null,
         "context_len": null,
+        "skip_seq_start": null,
+        "skip_seq_end": null,
         "top_p": 1.0,
         "repetition_penalty": 1
       },
@@ -6869,7 +7573,7 @@
       },
       "parallel_capable": true,
       "supports_multiple_generations": false,
-      "mod_time": "2024-08-29 13:35:37 +0000"
+      "mod_time": "2025-02-28 21:51:23 +0000"
     },
     "generators.rest.RestGenerator": {
       "description": "Generic API interface for REST models",
@@ -6878,15 +7582,20 @@
         "temperature": null,
         "top_k": null,
         "context_len": null,
+        "skip_seq_start": null,
+        "skip_seq_end": null,
         "headers": {},
         "method": "post",
         "ratelimit_codes": [
           429
         ],
+        "skip_codes": [],
         "response_json": false,
         "response_json_field": null,
         "req_template": "$INPUT",
-        "request_timeout": 20
+        "request_timeout": 20,
+        "proxies": null,
+        "verify_ssl": true
       },
       "active": true,
       "generator_family_name": "REST",
@@ -6900,7 +7609,7 @@
       },
       "parallel_capable": true,
       "supports_multiple_generations": false,
-      "mod_time": "2024-09-12 14:08:13 +0000"
+      "mod_time": "2025-02-28 21:51:23 +0000"
     },
     "generators.test.Blank": {
       "description": "This generator always returns the empty string.",
@@ -6908,7 +7617,9 @@
         "max_tokens": 150,
         "temperature": null,
         "top_k": null,
-        "context_len": null
+        "context_len": null,
+        "skip_seq_start": null,
+        "skip_seq_end": null
       },
       "active": true,
       "generator_family_name": "Test",
@@ -6930,7 +7641,9 @@
         "max_tokens": 150,
         "temperature": null,
         "top_k": null,
-        "context_len": null
+        "context_len": null,
+        "skip_seq_start": null,
+        "skip_seq_end": null
       },
       "active": true,
       "generator_family_name": "Test",
@@ -6952,7 +7665,9 @@
         "max_tokens": 150,
         "temperature": null,
         "top_k": null,
-        "context_len": null
+        "context_len": null,
+        "skip_seq_start": null,
+        "skip_seq_end": null
       },
       "active": true,
       "generator_family_name": "Test",
@@ -6974,7 +7689,9 @@
         "max_tokens": 150,
         "temperature": null,
         "top_k": null,
-        "context_len": null
+        "context_len": null,
+        "skip_seq_start": null,
+        "skip_seq_end": null
       },
       "active": true,
       "generator_family_name": "Test",
@@ -6989,6 +7706,36 @@
       "parallel_capable": true,
       "supports_multiple_generations": false,
       "mod_time": "2024-07-18 06:04:25 +0000"
+    },
+    "generators.watsonx.WatsonXGenerator": {
+      "description": "",
+      "DEFAULT_PARAMS": {
+        "max_tokens": 900,
+        "temperature": null,
+        "top_k": null,
+        "context_len": null,
+        "skip_seq_start": null,
+        "skip_seq_end": null,
+        "uri": null,
+        "version": "2023-05-29",
+        "project_id": "",
+        "deployment_id": "",
+        "prompt_variable": "input",
+        "bearer_token": ""
+      },
+      "active": true,
+      "generator_family_name": "watsonx",
+      "modality": {
+        "in": [
+          "text"
+        ],
+        "out": [
+          "text"
+        ]
+      },
+      "parallel_capable": true,
+      "supports_multiple_generations": false,
+      "mod_time": "2025-01-30 22:16:02 +0000"
     }
   },
   "harnesses": {
@@ -6998,7 +7745,7 @@
         "strict_modality_match": false
       },
       "active": true,
-      "mod_time": "2024-10-25 12:12:02 +0000"
+      "mod_time": "2024-11-14 13:22:08 +0000"
     },
     "harnesses.probewise.ProbewiseHarness": {
       "DEFAULT_PARAMS": {
@@ -7022,7 +7769,7 @@
       "active": true,
       "bcp47": null,
       "doc_uri": "",
-      "mod_time": "2024-10-25 09:35:40 +0000"
+      "mod_time": "2024-11-12 21:52:33 +0000"
     },
     "buffs.encoding.Base64": {
       "description": "Base64 buff",
@@ -7068,14 +7815,15 @@
       "active": true,
       "bcp47": "en",
       "doc_uri": "https://huggingface.co/humarin/chatgpt_paraphraser_on_T5_base",
-      "mod_time": "2024-10-24 09:15:08 +0000"
+      "mod_time": "2024-11-12 16:44:51 +0000"
     },
     "buffs.paraphrase.PegasusT5": {
       "description": "Paraphrasing buff using Pegasus model",
       "DEFAULT_PARAMS": {
         "para_model_name": "garak-llm/pegasus_paraphrase",
         "hf_args": {
-          "device": "cpu"
+          "device": "cpu",
+          "trust_remote_code": false
         },
         "max_length": 60,
         "temperature": 1.5
@@ -7083,7 +7831,7 @@
       "active": true,
       "bcp47": "en",
       "doc_uri": "https://huggingface.co/tuner007/pegasus_paraphrase",
-      "mod_time": "2024-10-24 09:15:08 +0000"
+      "mod_time": "2024-11-12 16:44:51 +0000"
     }
   }
 }

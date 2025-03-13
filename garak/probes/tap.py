@@ -184,8 +184,8 @@ class TAP(Probe):
             attempts_completed = []
 
             if (
-                _config.system.parallel_attempts
-                and _config.system.parallel_attempts > 1
+                self.parallel_attempts
+                and self.parallel_attempts > 1
                 and self.parallelisable_attempts
                 and len(attempts_todo) > 1
             ):
@@ -194,7 +194,7 @@ class TAP(Probe):
                 attempt_bar = tqdm.tqdm(total=len(attempts_todo), leave=False)
                 attempt_bar.set_description(self.probename.replace("garak.", ""))
 
-                with Pool(_config.system.parallel_attempts) as attempt_pool:
+                with Pool(self.parallel_attempts) as attempt_pool:
                     for result in attempt_pool.imap_unordered(
                         self._execute_attempt, attempts_todo
                     ):
@@ -260,6 +260,7 @@ class PAIR(Probe):
         "depth": 10,
         "n_streams": 1,
         "keep_last_n": 1,
+        "pruning": True,
     }
 
     def __init__(self, config_root=_config):
@@ -284,7 +285,7 @@ class PAIR(Probe):
                 attack_model_config=self.attack_model_config,
                 attack_max_attempts=self.attack_max_attempts,
                 evaluator_model_type=self.evaluator_model_type,
-                evaluator_model=self.evaluator_model_name,
+                evaluator_model_name=self.evaluator_model_name,
                 evaluator_model_config=self.evaluator_model_config,
                 branching_factor=self.branching_factor,
                 width=self.width,
@@ -314,8 +315,8 @@ class PAIR(Probe):
             attempts_completed = []
 
             if (
-                _config.system.parallel_attempts
-                and _config.system.parallel_attempts > 1
+                self.parallel_attempts
+                and self.parallel_attempts > 1
                 and self.parallelisable_attempts
                 and len(attempts_todo) > 1
             ):
@@ -324,7 +325,7 @@ class PAIR(Probe):
                 attempt_bar = tqdm.tqdm(total=len(attempts_todo), leave=False)
                 attempt_bar.set_description(self.probename.replace("garak.", ""))
 
-                with Pool(_config.system.parallel_attempts) as attempt_pool:
+                with Pool(self.parallel_attempts) as attempt_pool:
                     for result in attempt_pool.imap_unordered(
                         self._execute_attempt, attempts_todo
                     ):

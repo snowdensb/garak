@@ -38,6 +38,8 @@ class Detector(Configurable):
         "skip": False,
     }
 
+    _run_params = {"seed"}
+
     def _set_description(self):
         if "description" not in dir(self):
             try:
@@ -88,11 +90,11 @@ class HFDetector(Detector, HFCompatible):
             logging as transformers_logging,
         )
 
-        if _config.run.seed is not None:
-            set_seed(_config.run.seed)
-
         super().__init__(config_root=config_root)
         self.name = f"{self.__class__.__name__}: {self.detector_model_path}"
+
+        if self.seed is not None:
+            set_seed(self.seed)
 
         import torch.multiprocessing as mp
 
@@ -120,7 +122,9 @@ class HFDetector(Detector, HFCompatible):
             self.detector_model_path
         )
         self.detector = TextClassificationPipeline(
-            model=self.detector_model, tokenizer=self.detector_tokenizer
+            model=self.detector_model,
+            tokenizer=self.detector_tokenizer,
+            device=self.device,
         )
 
         transformers_logging.set_verbosity(orig_loglevel)
@@ -180,7 +184,7 @@ class StringDetector(Detector):
             if output is None:
                 continue
             for s in self.substrings:
-                if case_sensitive:
+                if not case_sensitive:
                     s, output = s.lower(), output.lower()
 
                 if self.matchtype == "str":
@@ -188,6 +192,9 @@ class StringDetector(Detector):
                         match = True
                 elif self.matchtype == "word":
                     if re.search(r"\b" + s + r"\b", output):
+                        match = True
+                elif self.matchtype == "startswith":
+                    if output.startswith(s):
                         match = True
                 else:
                     raise ValueError(

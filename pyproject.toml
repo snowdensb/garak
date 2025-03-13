@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "garak"
-version = "0.10.0.post1"
+version = "0.10.3.post1"
 authors = [
   { name = "Leon Derczynski", email="lderczynski@nvidia.com" },
   { name = "Subho Majumdar", email="subho@vijil.ai" },
@@ -30,6 +30,16 @@ authors = [
   { name = "Martin Borup-Larsen" },
   { name = "Emmanuel Ferdman" },
   { name = "Eric Therond" },
+  { name = "Zoe Nolan" },
+  { name = "Harsh Raj" },
+  { name = "Shine-afk" },
+  { name = "Rafael Sandroni" },  
+  { name = "Eric Hacker" },
+  { name = "Blessed Uyo" },
+  { name = "Ikko Eltociear Ashimine" },
+  { name = "iamnotcj" },
+  { name = "Dwight Temple" },
+  { name = "Shane Rosse" },
 ]
 license = { file = "LICENSE" }
 description = "LLM vulnerability scanner"
@@ -80,7 +90,7 @@ dependencies = [
   "lorem==0.1.1",
   "xdg-base-dirs>=6.0.1",
   "wn==0.9.5",
-  "ollama>=0.1.7",
+  "ollama>=0.4.7",
   "tiktoken>=0.7.0"
 ]
 
@@ -90,7 +100,8 @@ tests = [
   "pytest-mock>=3.14.0",
   "requests-mock==1.12.1",
   "respx>=0.21.1",
-  "pytest-cov>=5.0.0"
+  "pytest-cov>=5.0.0",
+  "pytest_httpserver>=1.1.0"
 ]
 lint = [
   "black==24.4.2",
@@ -101,8 +112,8 @@ calibration = [
 ]
 
 [project.urls]
-"Homepage" = "https://github.com/leondz/garak"
-"Bug Tracker" = "https://github.com/leondz/garak/issues"
+"Homepage" = "https://github.com/NVIDIA/garak"
+"Bug Tracker" = "https://github.com/NVIDIA/garak/issues"
 
 [project.scripts]
 garak = "garak.__main__:main"
