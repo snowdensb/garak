@@ -104,7 +104,7 @@ tests = [
   "pytest_httpserver>=1.1.0"
 ]
 lint = [
-  "black==24.4.2",
+  "black==26.3.0",
   "pylint>=3.1.0",
 ]
 calibration = [
